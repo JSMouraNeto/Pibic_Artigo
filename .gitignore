@@ -1,3 +1,11 @@
 *.pth
 ./data
 ./data_originals
+*.zip
+/base_gray_224_padded_balanced
+*.png
+*.jpeg
+*.json
+*.log
+*.jpg 
+*.xlsx
