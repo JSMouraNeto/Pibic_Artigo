@@ -353,7 +353,7 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Segmentador de pulmões usando MedSAM")
-    parser.add_argument('--datasets_root', type=str, default='./data', help='Diretório raiz das bases de dados')
+    parser.add_argument('--datasets_root', type=str, default='./Data_big', help='Diretório raiz das bases de dados')
     parser.add_argument('--dataset_name', type=str, default='bigger_base', help='Nome do subdiretório (base) a processar')
     parser.add_argument('--outputs_root', type=str, default='./sam_results_bigger_base', help='Diretório raiz para resultados')
     parser.add_argument('--model', choices=['sam_vit_h', 'sam_vit_l'],
