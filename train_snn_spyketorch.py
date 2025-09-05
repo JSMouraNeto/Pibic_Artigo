@@ -1,5 +1,5 @@
 # Passo 1: Instale a snnTorch
-# !pip install snntorch
+# pip install snntorch
 
 import os
 import torch
