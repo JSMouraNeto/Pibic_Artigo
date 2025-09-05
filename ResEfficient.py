@@ -266,8 +266,8 @@ def train_and_evaluate(args, logger):
 # --- 6. BLOCO DE EXECUÇÃO PRINCIPAL ---
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Framework de Treinamento de Classificador Híbrido com XAI")
-    parser.add_argument('--data_dir', type=str, default='Data_big', help='Diretório raiz contendo as pastas dos datasets.')
-    parser.add_argument('--classes', nargs='+', default=['COVID', 'Lung_Opacity', 'Normal', 'Viral Pneumonia'])
+    parser.add_argument('--data_dir', type=str, default='segmented_medsam/final_balanced_segmented', help='Diretório raiz contendo as pastas dos datasets.')
+    parser.add_argument('--classes', nargs='+', default=['covid19', 'normal', 'pneumonia_bacterial', 'pneumonia_viral'])
     parser.add_argument('--image_size', type=int, default=256)
     parser.add_argument('--dropout', type=float, default=0.4)
     parser.add_argument('--epochs', type=int, default=25, help='Número máximo de épocas.')
@@ -281,7 +281,7 @@ if __name__ == '__main__':
     set_seeds(base_args.seed)
 
     root_data_dir = Path(base_args.data_dir)
-    results_base_dir = "training_results_standardized_ResEfficient_bigger_base"
+    results_base_dir = "training_results_standardized_ResEfficient_Sans"
 
     for dataset_path in [d for d in root_data_dir.iterdir() if d.is_dir()]:
         dataset_name = dataset_path.name
