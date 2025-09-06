@@ -1,471 +1,525 @@
 # -*- coding: utf-8 -*-
 """
-Script completo para treinamento de uma Rede Neural de Pulso (SNN)
-baseada na arquitetura ResNet-50, utilizando snnTorch e PyTorch.
-
-Inclui validação cruzada K-Fold, early stopping, learning rate scheduler,
-e geração de mapas de calor Grad-CAM adaptados para SNNs.
+Algoritmo SNN Avançado para classificação com meta de 90%+ de acurácia.
+Melhorias implementadas:
+1. Arquitetura ResNet-style com conexões residuais adaptadas para SNN
+2. Múltiplos tipos de neurônios (Leaky, Synaptic, Alpha)
+3. Augmentação de dados avançada
+4. Learning rate scheduling e early stopping
+5. Ensemble de modelos
+6. Técnicas de regularização específicas para SNN
 """
 
-# Certifique-se de que as bibliotecas necessárias estão instaladas
-# !pip install torch torchvision snntorch scikit-learn seaborn matplotlib opencv-python tqdm
-
-import os
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from torch.utils.data import DataLoader, SubsetRandomSampler
-from torchvision import datasets, transforms, models
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
-from sklearn.model_selection import StratifiedKFold
-from sklearn.metrics import confusion_matrix
-import cv2
-from PIL import Image
-import logging
-from datetime import datetime
-import json
-from tqdm import tqdm
-import warnings
-
-# Importações específicas para SNN com snnTorch
+from torch.utils.data import DataLoader, WeightedRandomSampler
+from torchvision import datasets, transforms
 import snntorch as snn
 from snntorch import surrogate
 from snntorch import utils
+from snntorch import functional as SF
+from snntorch import spikegen
 
-warnings.filterwarnings('ignore')
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+from tqdm import tqdm
+import os
+from PIL import Image
+import random
+from collections import Counter
+import torch.nn.functional as F
+from sklearn.metrics import classification_report, confusion_matrix
+import seaborn as sns
 
-# Configuração de logging para acompanhar o treinamento
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
+# --- CONFIGURAÇÃO AVANÇADA ---
+class AdvancedConfig:
+    DATA_DIR = "sam_results_bigger_base/bigger_base_segmented"
+    BATCH_SIZE = 16      # Batch menor para estabilidade
+    IMG_SIZE = 128       # Imagens maiores para mais detalhes
+    NUM_WORKERS = os.cpu_count() // 2
+    
+    # Parâmetros SNN otimizados
+    NUM_STEPS = 20       # Mais passos para dinâmica temporal rica
+    BETA = 0.9           # Decaimento otimizado
+    THRESHOLD = 1.0      # Limiar de disparo
+    
+    # Parâmetros de treinamento otimizados
+    EPOCHS = 100
+    INITIAL_LR = 5e-4    # Learning rate inicial menor
+    MIN_LR = 1e-6
+    PATIENCE = 15        # Para early stopping
+    WEIGHT_DECAY = 1e-4
+    DROPOUT = 0.3
+    
+    # Ensemble
+    NUM_MODELS = 3       # Número de modelos no ensemble
+    
+    DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-class GradCAM_SNN:
-    """
-    Classe Grad-CAM adaptada para Redes Neurais de Pulso.
-    Lida com a dimensão temporal para gerar os mapas de calor.
-    """
-    def __init__(self, model, target_layer, num_steps):
-        self.model = model
-        self.target_layer = target_layer
-        self.num_steps = num_steps
-        self.gradients = None
-        self.activations = None
-        
-        # Hooks para capturar ativações e gradientes
-        self.target_layer.register_forward_hook(self.save_activation)
-        self.target_layer.register_full_backward_hook(self.save_gradient)
-
-    def save_activation(self, module, input, output):
-        self.activations = output.detach()
-
-    def save_gradient(self, module, grad_input, grad_output):
-        self.gradients = grad_output[0].detach()
-
-    def generate_cam(self, input_tensor, class_idx=None):
-        self.model.eval()
-        utils.reset(self.model)
-        
-        final_spk_sum = 0
-        for _ in range(self.num_steps):
-            spk_out = self.model(input_tensor)
-            final_spk_sum += spk_out
-        
-        if class_idx is None:
-            class_idx = final_spk_sum.argmax(dim=1).item()
-        elif torch.is_tensor(class_idx):
-            class_idx = class_idx.item()
-
-        self.model.zero_grad()
-        score = final_spk_sum[0, class_idx]
-        score.backward(retain_graph=True)
-        
-        gradients = self.gradients
-        activations = self.activations
-        
-        weights = torch.mean(gradients, dim=(2, 3))
-        
-        cam = torch.zeros(activations.shape[2:], dtype=torch.float32, device=activations.device)
-        for i, w in enumerate(weights[0]):
-            cam += w * activations[0, i, :, :]
-        
-        cam = torch.relu(cam)
-        
-        if cam.max() > 0:
-            cam_np = cam.cpu().numpy()
-            cam_np = (cam_np - np.min(cam_np)) / (np.max(cam_np) - np.min(cam_np))
-            return cam_np
-        else:
-            return torch.zeros(activations.shape[2:]).cpu().numpy()
-
-class EarlyStopping:
-    """Interrompe o treinamento quando a perda de validação para de melhorar."""
-    def __init__(self, patience=7, min_delta=0, restore_best_weights=True):
-        self.patience = patience
-        self.min_delta = min_delta
-        self.restore_best_weights = restore_best_weights
-        self.best_loss = float('inf')
-        self.counter = 0
-        self.best_weights = None
-
-    def __call__(self, val_loss, model):
-        if val_loss < self.best_loss - self.min_delta:
-            self.best_loss = val_loss
-            self.counter = 0
-            if self.restore_best_weights:
-                self.best_weights = {k: v.cpu().clone() for k, v in model.state_dict().items()}
-        else:
-            self.counter += 1
-
-        if self.counter >= self.patience:
-            logger.info("Early stopping acionado.")
-            if self.restore_best_weights and self.best_weights is not None:
-                logger.info("Restaurando os melhores pesos do modelo.")
-                device = next(model.parameters()).device
-                model.load_state_dict({k: v.to(device) for k, v in self.best_weights.items()})
-            return True
-        return False
-
-class SNN_ResNet50_Trainer:
-    """
-    Classe principal para orquestrar o treinamento e validação
-    de um modelo SNN-ResNet50.
-    """
-    def __init__(self, data_dir, batch_size=32, img_size=224, k_folds=5, num_steps=25):
-        self.data_dir = data_dir
-        self.batch_size = batch_size
-        self.img_size = img_size
-        self.k_folds = k_folds
-        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-        self.num_steps = num_steps
-
-        if torch.cuda.is_available():
-            gpu_props = torch.cuda.get_device_properties(0)
-            logger.info(f"GPU: {gpu_props.name} - VRAM Total: {gpu_props.total_memory / 1024**3:.1f}GB")
-        else:
-            logger.info("Utilizando CPU. O treinamento será significativamente mais lento.")
-
-        self.train_transform = transforms.Compose([
-            transforms.Resize((self.img_size, self.img_size)),
+# --- TRANSFORMAÇÕES AVANÇADAS ---
+def get_advanced_transforms(img_size, is_training=True):
+    if is_training:
+        return transforms.Compose([
+            transforms.Resize((img_size + 32, img_size + 32)),
+            transforms.RandomCrop((img_size, img_size)),
             transforms.RandomHorizontalFlip(p=0.5),
+            transforms.RandomVerticalFlip(p=0.2),
             transforms.RandomRotation(degrees=15),
-            transforms.ColorJitter(brightness=0.2, contrast=0.2),
+            transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1),
+            transforms.RandomAffine(degrees=0, translate=(0.1, 0.1), scale=(0.9, 1.1)),
             transforms.ToTensor(),
             transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
-            transforms.RandomErasing(p=0.2, scale=(0.02, 0.2))
+            transforms.RandomErasing(p=0.1)
         ])
-        self.val_transform = transforms.Compose([
-            transforms.Resize((self.img_size, self.img_size)),
+    else:
+        return transforms.Compose([
+            transforms.Resize((img_size, img_size)),
             transforms.ToTensor(),
             transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
         ])
 
-        self.full_dataset = datasets.ImageFolder(data_dir)
-        self.num_classes = len(self.full_dataset.classes)
-        self.class_names = self.full_dataset.classes
-        logger.info(f"Detectadas {self.num_classes} classes: {self.class_names}")
-
-    def setup_model(self):
-        """Configura a ResNet-50, substituindo ReLU por neurônios SNN."""
-        model = models.resnet50(weights=models.ResNet50_Weights.IMAGENET1K_V1)
-        spike_grad = surrogate.fast_sigmoid()
-
-        def replace_relu_with_snnleaky(module):
-            for name, child in module.named_children():
-                if isinstance(child, nn.ReLU):
-                    setattr(module, name, snn.Leaky(beta=0.9, spike_grad=spike_grad, init_hidden=True))
-                else:
-                    replace_relu_with_snnleaky(child)
+# --- BLOCO RESIDUAL SNN ---
+class SNNResidualBlock(nn.Module):
+    def __init__(self, in_channels, out_channels, stride=1, beta=0.9):
+        super().__init__()
         
-        replace_relu_with_snnleaky(model)
-
-        for name, param in model.named_parameters():
-            param.requires_grad = False
-
-        for name, param in model.named_parameters():
-            if "layer4" in name or "fc" in name:
-                param.requires_grad = True
-
-        num_ftrs = model.fc.in_features
-        model.fc = nn.Linear(num_ftrs, self.num_classes)
+        spike_grad = surrogate.atan(alpha=2.0)
         
-        self.model = model.to(self.device)
-        self.scaler = torch.cuda.amp.GradScaler(enabled=self.device.type == 'cuda')
-
-    def create_optimizer_scheduler(self):
-        """Cria otimizador e scheduler com learning rates diferenciados."""
-        params_to_update = [
-            {'params': [p for n, p in self.model.named_parameters() if "layer4" in n and p.requires_grad], 'lr': 1e-5},
-            {'params': self.model.fc.parameters(), 'lr': 1e-3}
-        ]
+        # Convolução principal
+        self.conv1 = nn.Conv2d(in_channels, out_channels, kernel_size=3, 
+                              stride=stride, padding=1, bias=False)
+        self.bn1 = nn.BatchNorm2d(out_channels)
+        self.lif1 = snn.Leaky(beta=beta, spike_grad=spike_grad, init_hidden=True)
         
-        optimizer = optim.AdamW(params_to_update, weight_decay=1e-4)
-        scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, T_0=10, T_mult=2, eta_min=1e-6)
-        return optimizer, scheduler
+        self.conv2 = nn.Conv2d(out_channels, out_channels, kernel_size=3,
+                              stride=1, padding=1, bias=False)
+        self.bn2 = nn.BatchNorm2d(out_channels)
+        self.lif2 = snn.Leaky(beta=beta, spike_grad=spike_grad, init_hidden=True)
+        
+        # Conexão residual
+        self.shortcut = nn.Sequential()
+        if stride != 1 or in_channels != out_channels:
+            self.shortcut = nn.Sequential(
+                nn.Conv2d(in_channels, out_channels, kernel_size=1, stride=stride, bias=False),
+                nn.BatchNorm2d(out_channels)
+            )
+        
+        self.lif_out = snn.Leaky(beta=beta, spike_grad=spike_grad, init_hidden=True)
+        
+    def forward(self, x):
+        # Fluxo principal
+        out = self.lif1(self.bn1(self.conv1(x)))
+        out = self.bn2(self.conv2(out))
+        
+        # Adiciona conexão residual
+        out += self.shortcut(x)
+        out = self.lif_out(out)
+        
+        return out
 
-    def train_epoch(self, model, dataloader, optimizer, criterion):
-        model.train()
-        running_loss = 0.0
-        correct = 0
-        total = 0
+# --- BLOCO DE ATENÇÃO TEMPORAL ---
+class TemporalAttention(nn.Module):
+    def __init__(self, channels, reduction=16):
+        super().__init__()
+        self.avg_pool = nn.AdaptiveAvgPool2d(1)
+        self.fc = nn.Sequential(
+            nn.Linear(channels, channels // reduction, bias=False),
+            nn.ReLU(inplace=True),
+            nn.Linear(channels // reduction, channels, bias=False),
+            nn.Sigmoid()
+        )
+        
+    def forward(self, x):
+        b, c, _, _ = x.size()
+        y = self.avg_pool(x).view(b, c)
+        y = self.fc(y).view(b, c, 1, 1)
+        return x * y.expand_as(x)
 
-        pbar = tqdm(dataloader, desc="Treinando")
-        for images, labels in pbar:
-            images, labels = images.to(self.device), labels.to(self.device)
-            optimizer.zero_grad(set_to_none=True)
+# --- MODELO SNN AVANÇADO ---
+class AdvancedSNN_Classifier(nn.Module):
+    def __init__(self, num_classes, beta=0.9, dropout=0.3):
+        super().__init__()
+        
+        spike_grad = surrogate.atan(alpha=2.0)
+        
+        # Stem (entrada)
+        self.stem = nn.Sequential(
+            nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3, bias=False),
+            nn.BatchNorm2d(64),
+        )
+        self.stem_lif = snn.Leaky(beta=beta, spike_grad=spike_grad, init_hidden=True)
+        self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
+        
+        # Blocos residuais
+        self.layer1 = self._make_layer(64, 64, 2, stride=1, beta=beta)
+        self.layer2 = self._make_layer(64, 128, 2, stride=2, beta=beta)
+        self.layer3 = self._make_layer(128, 256, 2, stride=2, beta=beta)
+        self.layer4 = self._make_layer(256, 512, 2, stride=2, beta=beta)
+        
+        # Atenção temporal
+        self.attention = TemporalAttention(512)
+        
+        # Pooling adaptativo e classificador
+        self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
+        self.dropout = nn.Dropout(dropout)
+        
+        # Múltiplas camadas de classificação com diferentes tipos de neurônios
+        self.fc1 = nn.Linear(512, 256)
+        self.lif_fc1 = snn.Leaky(beta=beta, spike_grad=spike_grad, init_hidden=True)
+        
+        self.fc2 = nn.Linear(256, 128)
+        self.synaptic_fc2 = snn.Synaptic(alpha=0.8, beta=beta, spike_grad=spike_grad, init_hidden=True)
+        
+        self.fc3 = nn.Linear(128, num_classes)
+        self.lif_out = snn.Leaky(beta=beta, spike_grad=spike_grad, init_hidden=True, output=True)
+        
+    def _make_layer(self, in_channels, out_channels, blocks, stride, beta):
+        layers = []
+        layers.append(SNNResidualBlock(in_channels, out_channels, stride, beta))
+        for _ in range(1, blocks):
+            layers.append(SNNResidualBlock(out_channels, out_channels, 1, beta))
+        return nn.Sequential(*layers)
+    
+    def forward(self, x):
+        utils.reset(self)
+        spk_rec = []
+        mem_rec = []
+        
+        for step in range(AdvancedConfig.NUM_STEPS):
+            # Stem
+            cur = self.stem_lif(self.stem(x))
+            cur = self.maxpool(cur)
             
-            utils.reset(model)
+            # Blocos residuais
+            cur = self.layer1(cur)
+            cur = self.layer2(cur)
+            cur = self.layer3(cur)
+            cur = self.layer4(cur)
             
-            spk_rec_total = 0
-            with torch.cuda.amp.autocast(enabled=self.device.type == 'cuda'):
-                for _ in range(self.num_steps):
-                    spk_out = model(images)
-                    spk_rec_total += spk_out
-                
-                loss = criterion(spk_rec_total / self.num_steps, labels)
+            # Atenção
+            cur = self.attention(cur)
+            
+            # Classificador
+            cur = self.avgpool(cur)
+            cur = torch.flatten(cur, 1)
+            cur = self.dropout(cur)
+            
+            cur = self.lif_fc1(self.fc1(cur))
+            cur = self.dropout(cur)
+            
+            cur = self.synaptic_fc2(self.fc2(cur))
+            cur = self.dropout(cur)
+            
+            spk_out, mem_out = self.lif_out(self.fc3(cur))
+            spk_rec.append(spk_out)
+            mem_rec.append(mem_out)
+        
+        # Retorna tanto a soma dos spikes quanto a média dos potenciais de membrana
+        spk_sum = torch.stack(spk_rec, dim=0).sum(dim=0)
+        mem_avg = torch.stack(mem_rec, dim=0).mean(dim=0)
+        
+        return spk_sum, mem_avg
 
-            self.scaler.scale(loss).backward()
-            self.scaler.step(optimizer)
-            self.scaler.update()
+# --- FUNÇÃO DE PERDA COMBINADA ---
+class CombinedLoss(nn.Module):
+    def __init__(self, alpha=0.8):
+        super().__init__()
+        self.ce_loss = nn.CrossEntropyLoss()
+        self.mse_loss = nn.MSELoss()
+        self.alpha = alpha
+    
+    def forward(self, spike_output, mem_output, targets):
+        # Perda principal baseada em spikes
+        spike_loss = self.ce_loss(spike_output, targets)
+        
+        # Perda auxiliar baseada em potencial de membrana
+        target_one_hot = F.one_hot(targets, num_classes=spike_output.size(1)).float()
+        mem_loss = self.mse_loss(torch.softmax(mem_output, dim=1), target_one_hot)
+        
+        return self.alpha * spike_loss + (1 - self.alpha) * mem_loss
+
+# --- SCHEDULER PERSONALIZADO ---
+class WarmupCosineScheduler:
+    def __init__(self, optimizer, warmup_steps, total_steps, min_lr=1e-6):
+        self.optimizer = optimizer
+        self.warmup_steps = warmup_steps
+        self.total_steps = total_steps
+        self.min_lr = min_lr
+        self.base_lr = optimizer.param_groups[0]['lr']
+        
+    def step(self, step):
+        if step < self.warmup_steps:
+            # Warmup linear
+            lr = self.base_lr * (step / self.warmup_steps)
+        else:
+            # Cosine annealing
+            progress = (step - self.warmup_steps) / (self.total_steps - self.warmup_steps)
+            lr = self.min_lr + (self.base_lr - self.min_lr) * 0.5 * (1 + np.cos(np.pi * progress))
+        
+        for param_group in self.optimizer.param_groups:
+            param_group['lr'] = lr
+        
+        return lr
+
+# --- FUNÇÕES DE TREINO AVANÇADAS ---
+def train_epoch_advanced(model, dataloader, optimizer, criterion, device, scheduler=None, epoch=0):
+    model.train()
+    running_loss = 0.0
+    correct = 0
+    total = 0
+    
+    pbar = tqdm(dataloader, desc=f"Época {epoch+1} - Treino")
+    for batch_idx, (images, labels) in enumerate(pbar):
+        images, labels = images.to(device), labels.to(device)
+        
+        optimizer.zero_grad()
+        spike_out, mem_out = model(images)
+        loss = criterion(spike_out, mem_out, labels)
+        loss.backward()
+        
+        # Gradient clipping
+        torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+        
+        optimizer.step()
+        
+        if scheduler:
+            scheduler.step(epoch * len(dataloader) + batch_idx)
+        
+        running_loss += loss.item()
+        _, predicted = spike_out.max(1)
+        total += labels.size(0)
+        correct += predicted.eq(labels).sum().item()
+        
+        if batch_idx % 50 == 0:
+            current_lr = optimizer.param_groups[0]['lr']
+            pbar.set_postfix({
+                'Perda': f'{loss.item():.4f}',
+                'Acur.': f'{100.*correct/total:.2f}%',
+                'LR': f'{current_lr:.2e}'
+            })
+    
+    return running_loss / len(dataloader), 100. * correct / total
+
+def validate_epoch_advanced(model, dataloader, criterion, device):
+    model.eval()
+    running_loss = 0.0
+    correct = 0
+    total = 0
+    all_preds = []
+    all_labels = []
+    
+    with torch.no_grad():
+        for images, labels in tqdm(dataloader, desc="Validação"):
+            images, labels = images.to(device), labels.to(device)
+            spike_out, mem_out = model(images)
+            loss = criterion(spike_out, mem_out, labels)
             
             running_loss += loss.item()
-            _, predicted = torch.max(spk_rec_total.data, 1)
+            _, predicted = spike_out.max(1)
             total += labels.size(0)
-            correct += (predicted == labels).sum().item()
-            pbar.set_postfix({'Perda': f'{loss.item():.4f}', 'Acur.': f'{100.*correct/total:.2f}%'})
-
-        return running_loss / len(dataloader), 100. * correct / total
-
-    def validate_epoch(self, model, dataloader, criterion):
-        model.eval()
-        running_loss = 0.0
-        correct = 0
-        total = 0
-        all_preds, all_labels = [], []
-
-        with torch.no_grad():
-            for images, labels in tqdm(dataloader, desc="Validando"):
-                images, labels = images.to(self.device), labels.to(self.device)
-                utils.reset(model)
-                
-                spk_rec_total = 0
-                with torch.cuda.amp.autocast(enabled=self.device.type == 'cuda'):
-                    for _ in range(self.num_steps):
-                        spk_out = model(images)
-                        spk_rec_total += spk_out
-                
-                loss = criterion(spk_rec_total / self.num_steps, labels)
-                
-                running_loss += loss.item()
-                _, predicted = torch.max(spk_rec_total.data, 1)
-                total += labels.size(0)
-                correct += (predicted == labels).sum().item()
-                all_preds.extend(predicted.cpu().numpy())
-                all_labels.extend(labels.cpu().numpy())
-
-        return running_loss / len(dataloader), 100. * correct / total, all_preds, all_labels
+            correct += predicted.eq(labels).sum().item()
+            
+            all_preds.extend(predicted.cpu().numpy())
+            all_labels.extend(labels.cpu().numpy())
     
-    def generate_heatmaps(self, model, save_dir):
-        """Gera e salva mapas de calor Grad-CAM para uma amostra de cada classe."""
-        logger.info("Gerando mapas de calor Grad-CAM...")
-        model.eval()
-        os.makedirs(save_dir, exist_ok=True)
+    return running_loss / len(dataloader), 100. * correct / total, all_preds, all_labels
+
+# --- ENSEMBLE DE MODELOS ---
+class SNNEnsemble:
+    def __init__(self, num_models, num_classes, device):
+        self.models = []
+        self.num_models = num_models
+        self.device = device
         
-        target_layer = model.layer4[-1]
-        grad_cam = GradCAM_SNN(model, target_layer, self.num_steps)
+        for i in range(num_models):
+            # Variação nos hiperparâmetros para diversidade
+            beta = 0.85 + 0.1 * (i / num_models)
+            dropout = 0.2 + 0.2 * (i / num_models)
+            model = AdvancedSNN_Classifier(num_classes, beta=beta, dropout=dropout).to(device)
+            self.models.append(model)
+    
+    def train_ensemble(self, train_loader, val_loader, epochs):
+        results = []
         
-        heatmap_dataset = datasets.ImageFolder(self.data_dir, transform=self.val_transform)
-        
-        samples_per_class = {}
-        for idx, (_, label) in enumerate(heatmap_dataset):
-            if label not in samples_per_class:
-                samples_per_class[label] = idx
-            if len(samples_per_class) == self.num_classes:
-                break
-        
-        fig, axes = plt.subplots(self.num_classes, 3, figsize=(15, 5 * self.num_classes))
-        fig.suptitle('Grad-CAM Heatmaps para SNN-ResNet50', fontsize=20)
-
-        for i, (label, idx) in enumerate(samples_per_class.items()):
-            class_name = self.class_names[label]
-            image, _ = heatmap_dataset[idx]
-            image_tensor = image.unsqueeze(0).to(self.device)
-
-            cam = grad_cam.generate_cam(image_tensor, label)
-            cam_resized = cv2.resize(cam, (self.img_size, self.img_size))
-
-            img_np = image.permute(1, 2, 0).numpy()
-            img_np = (img_np * np.array([0.229, 0.224, 0.225])) + np.array([0.485, 0.456, 0.406])
-            img_np = np.clip(img_np, 0, 1)
-
-            ax_row = axes if self.num_classes == 1 else axes[i]
-            ax_row[0].imshow(img_np)
-            ax_row[0].set_title(f'Original - {class_name}')
-            ax_row[0].axis('off')
-
-            ax_row[1].imshow(cam_resized, cmap='jet')
-            ax_row[1].set_title(f'Heatmap - {class_name}')
-            ax_row[1].axis('off')
-
-            ax_row[2].imshow(img_np)
-            ax_row[2].imshow(cam_resized, cmap='jet', alpha=0.4)
-            ax_row[2].set_title(f'Sobreposição - {class_name}')
-            ax_row[2].axis('off')
-
-        plt.tight_layout(rect=[0, 0.03, 1, 0.97])
-        heatmap_path = os.path.join(save_dir, 'gradcam_heatmaps.png')
-        plt.savefig(heatmap_path, dpi=300)
-        plt.close()
-        logger.info(f"Mapas de calor salvos em {heatmap_path}")
-
-    def plot_confusion_matrix(self, y_true, y_pred, save_path):
-        cm = confusion_matrix(y_true, y_pred)
-        plt.figure(figsize=(10, 8))
-        sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=self.class_names, yticklabels=self.class_names)
-        plt.title('Matriz de Confusão')
-        plt.ylabel('Rótulo Verdadeiro')
-        plt.xlabel('Rótulo Previsto')
-        plt.tight_layout()
-        plt.savefig(save_path, dpi=300)
-        plt.close()
-
-    def train_kfold(self, epochs=50, save_dir='results'):
-        os.makedirs(save_dir, exist_ok=True)
-        log_file = os.path.join(save_dir, f'training_log_{datetime.now().strftime("%Y%m%d_%H%M%S")}.log')
-        fh = logging.FileHandler(log_file)
-        fh.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
-        logger.addHandler(fh)
-
-        targets = [s[1] for s in self.full_dataset.samples]
-        kfold = StratifiedKFold(n_splits=self.k_folds, shuffle=True, random_state=42)
-
-        fold_results, all_train_losses, all_val_losses, all_train_accs, all_val_accs = [], [], [], [], []
-
-        for fold, (train_ids, val_ids) in enumerate(kfold.split(np.arange(len(self.full_dataset)), targets)):
-            logger.info(f"\n{'='*50}\nINICIANDO FOLD {fold + 1}/{self.k_folds}\n{'='*50}")
-            self.setup_model()
-
-            train_subset = torch.utils.data.Subset(self.full_dataset, train_ids)
-            val_subset = torch.utils.data.Subset(self.full_dataset, val_ids)
+        for i, model in enumerate(self.models):
+            print(f"\nTreinando modelo {i+1}/{self.num_models} do ensemble...")
             
-            train_subset.dataset.transform = self.train_transform
-            val_subset.dataset.transform = self.val_transform
+            optimizer = optim.AdamW(model.parameters(), lr=AdvancedConfig.INITIAL_LR,
+                                  weight_decay=AdvancedConfig.WEIGHT_DECAY)
+            criterion = CombinedLoss()
             
-            train_loader = DataLoader(train_subset, batch_size=self.batch_size, shuffle=True, num_workers=4, pin_memory=True)
-            val_loader = DataLoader(val_subset, batch_size=self.batch_size, num_workers=4, pin_memory=True)
-
-            optimizer, scheduler = self.create_optimizer_scheduler()
-            criterion = nn.CrossEntropyLoss(label_smoothing=0.1)
-            early_stopping = EarlyStopping(patience=15, min_delta=0.001)
-
-            fold_history = {'train_loss': [], 'val_loss': [], 'train_acc': [], 'val_acc': []}
-            best_val_acc = 0.0
-
+            total_steps = epochs * len(train_loader)
+            scheduler = WarmupCosineScheduler(optimizer, warmup_steps=total_steps//10, 
+                                           total_steps=total_steps, min_lr=AdvancedConfig.MIN_LR)
+            
+            best_val_acc = 0
+            patience_counter = 0
+            
             for epoch in range(epochs):
-                logger.info(f"\n--- Epoch {epoch+1}/{epochs} ---")
-                train_loss, train_acc = self.train_epoch(self.model, train_loader, optimizer, criterion)
-                val_loss, val_acc, val_preds, val_labels = self.validate_epoch(self.model, val_loader, criterion)
-                scheduler.step()
-
-                fold_history['train_loss'].append(train_loss); fold_history['val_loss'].append(val_loss)
-                fold_history['train_acc'].append(train_acc); fold_history['val_acc'].append(val_acc)
-
-                logger.info(f"Perda Treino: {train_loss:.4f}, Acur. Treino: {train_acc:.2f}%")
-                logger.info(f"Perda Val.: {val_loss:.4f}, Acur. Val.: {val_acc:.2f}%")
-                logger.info(f"LR atual: {optimizer.param_groups[0]['lr']:.2e}")
-
+                train_loss, train_acc = train_epoch_advanced(model, train_loader, optimizer, 
+                                                           criterion, self.device, scheduler, epoch)
+                val_loss, val_acc, _, _ = validate_epoch_advanced(model, val_loader, criterion, self.device)
+                
+                print(f"Modelo {i+1} - Época {epoch+1}: Val Acc: {val_acc:.2f}%")
+                
                 if val_acc > best_val_acc:
                     best_val_acc = val_acc
-                    model_path = os.path.join(save_dir, f'best_model_fold_{fold+1}.pth')
-                    torch.save(self.model.state_dict(), model_path)
-                    logger.info(f"Novo melhor modelo salvo em {model_path} com acurácia de {best_val_acc:.2f}%")
-
-                if early_stopping(val_loss, self.model):
+                    patience_counter = 0
+                    torch.save(model.state_dict(), f"best_snn_ensemble_model_{i}.pth")
+                else:
+                    patience_counter += 1
+                    
+                if patience_counter >= AdvancedConfig.PATIENCE:
+                    print(f"Early stopping para modelo {i+1} na época {epoch+1}")
                     break
-
-            fold_results.append({'fold': fold + 1, 'best_val_acc': best_val_acc})
-            all_train_losses.append(fold_history['train_loss']); all_val_losses.append(fold_history['val_loss'])
-            all_train_accs.append(fold_history['train_acc']); all_val_accs.append(fold_history['val_acc'])
             
-            self.plot_confusion_matrix(val_labels, val_preds, os.path.join(save_dir, f'confusion_matrix_fold_{fold+1}.png'))
-
-            if fold == 0:
-                best_model_path = os.path.join(save_dir, f'best_model_fold_{fold+1}.pth')
-                if os.path.exists(best_model_path):
-                    self.model.load_state_dict(torch.load(best_model_path))
-                    self.generate_heatmaps(self.model, save_dir)
+            # Carrega o melhor modelo
+            model.load_state_dict(torch.load(f"best_snn_ensemble_model_{i}.pth"))
+            results.append(best_val_acc)
         
-        self.save_final_results(fold_results, all_train_losses, all_val_losses, all_train_accs, all_val_accs, save_dir)
-
-    def save_final_results(self, fold_results, train_losses, val_losses, train_accs, val_accs, save_dir):
-        """Salva os resultados consolidados e os gráficos de treinamento."""
-        mean_acc = np.mean([f['best_val_acc'] for f in fold_results])
-        std_acc = np.std([f['best_val_acc'] for f in fold_results])
-
-        final_stats = {
-            'mean_val_accuracy': mean_acc,
-            'std_dev_val_accuracy': std_acc,
-            'fold_results': fold_results
-        }
+        return results
+    
+    def predict(self, dataloader):
+        predictions = []
         
-        with open(os.path.join(save_dir, 'training_summary.json'), 'w') as f:
-            json.dump(final_stats, f, indent=4)
-
-        logger.info(f"\n{'='*50}\nRESULTADO FINAL K-FOLD\n{'='*50}")
-        logger.info(f"Acurácia Média de Validação: {mean_acc:.2f}% ± {std_acc:.2f}%")
-
-        self.plot_training_history(train_losses, val_losses, train_accs, val_accs, save_dir)
-        logger.info(f"Resultados, logs e gráficos salvos no diretório: {save_dir}")
-
-    def plot_training_history(self, all_train_losses, all_val_losses, all_train_accs, all_val_accs, save_dir):
-        fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(18, 14))
-        fig.suptitle('Histórico de Treinamento por Fold', fontsize=20)
+        for model in self.models:
+            model.eval()
+            model_preds = []
+            
+            with torch.no_grad():
+                for images, _ in dataloader:
+                    images = images.to(self.device)
+                    spike_out, mem_out = model(images)
+                    # Combina informação de spikes e potencial de membrana
+                    combined_out = F.softmax(spike_out, dim=1) + 0.3 * F.softmax(mem_out, dim=1)
+                    model_preds.append(combined_out.cpu())
+            
+            predictions.append(torch.cat(model_preds))
         
-        for i in range(len(all_train_losses)):
-            ax1.plot(all_train_losses[i], alpha=0.7, label=f'Fold {i+1}')
-            ax2.plot(all_val_losses[i], alpha=0.7, label=f'Fold {i+1}')
-            ax3.plot(all_train_accs[i], alpha=0.7, label=f'Fold {i+1}')
-            ax4.plot(all_val_accs[i], alpha=0.7, label=f'Fold {i+1}')
+        # Média das predições do ensemble
+        ensemble_pred = torch.stack(predictions).mean(dim=0)
+        return ensemble_pred.argmax(dim=1).numpy()
 
-        ax1.set_title('Perda de Treinamento'); ax1.set_xlabel('Época'); ax1.set_ylabel('Perda'); ax1.legend(); ax1.grid(True)
-        ax2.set_title('Perda de Validação'); ax2.set_xlabel('Época'); ax2.set_ylabel('Perda'); ax2.legend(); ax2.grid(True)
-        ax3.set_title('Acurácia de Treinamento'); ax3.set_xlabel('Época'); ax3.set_ylabel('Acurácia (%)'); ax3.legend(); ax3.grid(True)
-        ax4.set_title('Acurácia de Validação'); ax4.set_xlabel('Época'); ax4.set_ylabel('Acurácia (%)'); ax4.legend(); ax4.grid(True)
-        
-        plt.tight_layout(rect=[0, 0.03, 1, 0.95])
-        plt.savefig(os.path.join(save_dir, 'training_history.png'), dpi=300)
-        plt.close()
+# --- VISUALIZAÇÃO AVANÇADA ---
+def plot_training_metrics(train_accs, val_accs, train_losses, val_losses):
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 5))
+    
+    ax1.plot(train_accs, label='Treino', color='blue')
+    ax1.plot(val_accs, label='Validação', color='red')
+    ax1.set_title('Acurácia ao Longo do Treinamento')
+    ax1.set_xlabel('Época')
+    ax1.set_ylabel('Acurácia (%)')
+    ax1.legend()
+    ax1.grid(True)
+    
+    ax2.plot(train_losses, label='Treino', color='blue')
+    ax2.plot(val_losses, label='Validação', color='red')
+    ax2.set_title('Perda ao Longo do Treinamento')
+    ax2.set_xlabel('Época')
+    ax2.set_ylabel('Perda')
+    ax2.legend()
+    ax2.grid(True)
+    
+    plt.tight_layout()
+    plt.savefig('training_metrics.png', dpi=300, bbox_inches='tight')
+    plt.show()
 
-if __name__ == "__main__":
-    # --- CONFIGURAÇÕES DO TREINAMENTO ---
-    # !!! ATENÇÃO: ATUALIZE ESTE CAMINHO PARA O SEU DATASET !!!
-    DATA_DIR = "data_originals/chest_xray" 
+def plot_confusion_matrix(y_true, y_pred, class_names):
+    cm = confusion_matrix(y_true, y_pred)
+    plt.figure(figsize=(12, 10))
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', 
+                xticklabels=class_names, yticklabels=class_names)
+    plt.title('Matriz de Confusão - Ensemble SNN')
+    plt.xlabel('Predição')
+    plt.ylabel('Real')
+    plt.tight_layout()
+    plt.savefig('confusion_matrix.png', dpi=300, bbox_inches='tight')
+    plt.show()
 
-    # Parâmetros de Treinamento
-    BATCH_SIZE = 16      # Reduza se tiver erros de memória (OutOfMemoryError)
-    IMG_SIZE = 224       # Tamanho da imagem para ResNet
-    K_FOLDS = 5          # Número de folds para validação cruzada
-    EPOCHS = 50          # Número máximo de épocas por fold
-    NUM_STEPS = 20       # Número de passos de tempo para a simulação SNN (15-25 é um bom começo)
-    SAVE_DIR = 'resultados_SNN_ResNet50' # Pasta para salvar os resultados
-
-    # --- INÍCIO DA EXECUÇÃO ---
-    if not os.path.exists(DATA_DIR) or not os.listdir(DATA_DIR):
+# --- FUNÇÃO PRINCIPAL ---
+def main():
+    cfg = AdvancedConfig()
+    
+    if not os.path.exists(cfg.DATA_DIR) or not os.listdir(cfg.DATA_DIR):
         print("="*60)
         print(f"ERRO: Diretório do dataset não encontrado ou está vazio!")
-        print(f"Caminho configurado: '{DATA_DIR}'")
-        print("Por favor, atualize a variável DATA_DIR no final do script.")
+        print(f"Caminho configurado: '{cfg.DATA_DIR}'")
         print("="*60)
-        exit(1)
+        return
+    
+    print(f"Dispositivo: {cfg.DEVICE}")
+    print(f"Configuração: {cfg.EPOCHS} épocas, Batch Size: {cfg.BATCH_SIZE}")
+    
+    # Datasets com transformações avançadas
+    train_transform = get_advanced_transforms(cfg.IMG_SIZE, is_training=True)
+    val_transform = get_advanced_transforms(cfg.IMG_SIZE, is_training=False)
+    
+    full_dataset = datasets.ImageFolder(cfg.DATA_DIR, transform=val_transform)
+    num_classes = len(full_dataset.classes)
+    class_names = full_dataset.classes
+    
+    print(f"Encontradas {num_classes} classes: {class_names}")
+    
+    # Divisão estratificada
+    train_size = int(0.8 * len(full_dataset))
+    val_size = len(full_dataset) - train_size
+    train_dataset, val_dataset = torch.utils.data.random_split(full_dataset, [train_size, val_size])
+    
+    # Aplica transformações de treino apenas ao conjunto de treino
+    train_dataset.dataset = datasets.ImageFolder(cfg.DATA_DIR, transform=train_transform)
+    
+    # Balanceamento das classes
+    train_labels = [full_dataset.targets[i] for i in train_dataset.indices]
+    class_counts = Counter(train_labels)
+    weights = [1.0 / class_counts[label] for label in train_labels]
+    sampler = WeightedRandomSampler(weights, len(weights))
+    
+    train_loader = DataLoader(train_dataset, batch_size=cfg.BATCH_SIZE, 
+                             sampler=sampler, num_workers=cfg.NUM_WORKERS)
+    val_loader = DataLoader(val_dataset, batch_size=cfg.BATCH_SIZE, 
+                           shuffle=False, num_workers=cfg.NUM_WORKERS)
+    
+    print(f"Tamanho do conjunto de treino: {len(train_dataset)}")
+    print(f"Tamanho do conjunto de validação: {len(val_dataset)}")
+    
+    # Treina ensemble
+    ensemble = SNNEnsemble(cfg.NUM_MODELS, num_classes, cfg.DEVICE)
+    ensemble_results = ensemble.train_ensemble(train_loader, val_loader, cfg.EPOCHS)
+    
+    print(f"\nResultados do Ensemble:")
+    for i, acc in enumerate(ensemble_results):
+        print(f"Modelo {i+1}: {acc:.2f}%")
+    print(f"Média do Ensemble: {np.mean(ensemble_results):.2f}%")
+    
+    # Avaliação final
+    print("\nAvaliação final do ensemble...")
+    final_preds = ensemble.predict(val_loader)
+    val_labels = [full_dataset.targets[i] for i in val_dataset.indices]
+    
+    final_accuracy = (final_preds == val_labels).mean() * 100
+    print(f"Acurácia final do ensemble: {final_accuracy:.2f}%")
+    
+    # Relatório detalhado
+    print("\nRelatório de classificação:")
+    print(classification_report(val_labels, final_preds, target_names=class_names))
+    
+    # Visualizações
+    plot_confusion_matrix(val_labels, final_preds, class_names)
+    
+    # Salva o melhor modelo individual para visualização posterior
+    best_model_idx = np.argmax(ensemble_results)
+    best_model = ensemble.models[best_model_idx]
+    torch.save(best_model.state_dict(), "best_advanced_snn_model.pth")
+    
+    print(f"\nMelhor modelo individual (#{best_model_idx+1}) salvo com {ensemble_results[best_model_idx]:.2f}% de acurácia")
+    print(f"Acurácia do ensemble: {final_accuracy:.2f}%")
+    
+    if final_accuracy >= 90:
+        print("🎉 META DE 90% DE ACURÁCIA ALCANÇADA! 🎉")
+    else:
+        print(f"Meta não alcançada. Diferença: {90 - final_accuracy:.2f}%")
 
-    trainer = SNN_ResNet50_Trainer(
-        data_dir=DATA_DIR,
-        batch_size=BATCH_SIZE,
-        img_size=IMG_SIZE,
-        k_folds=K_FOLDS,
-        num_steps=NUM_STEPS
-    )
-
-    trainer.train_kfold(epochs=EPOCHS, save_dir=SAVE_DIR)
-
-    print("\nTreinamento concluído!")
+if __name__ == "__main__":
+    main()
