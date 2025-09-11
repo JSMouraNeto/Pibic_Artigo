@@ -1,0 +1,11 @@
+2025-09-10 21:15:18,602 - INFO - Parâmetros: LR=0.01, Dropout=0.3, Batch=8, Optimizer=adamw, Hidden=2048, Aug=light
+2025-09-10 21:15:18,602 - INFO - Usando dispositivo: cuda
+2025-09-10 21:15:18,696 - INFO - Usando apenas 30.0% do dataset total.
+2025-09-10 21:15:18,706 - INFO - Tamanho do dataset após subamostragem: 10479 imagens.
+2025-09-10 21:15:18,710 - INFO - Dataset dividido em: 6287 treino, 2096 validação, 2096 teste.
+2025-09-10 21:16:00,768 - INFO - Epoch 1/50 -> Loss: 10.9623, Val F1: 0.1290, Val Acc: 0.2004
+2025-09-10 21:16:00,768 - INFO - 🎉 Novo melhor F1-Score de validação: 0.1290
+2025-09-10 21:16:41,933 - INFO - Epoch 2/50 -> Loss: 1.7825, Val F1: 0.0546, Val Acc: 0.1579
+2025-09-10 21:17:22,895 - INFO - Epoch 3/50 -> Loss: 2.0575, Val F1: 0.0584, Val Acc: 0.1708
+2025-09-10 21:18:03,900 - INFO - Epoch 4/50 -> Loss: 1.6239, Val F1: 0.0588, Val Acc: 0.1722
+2025-09-10 21:18:44,882 - INFO - Epoch 5/50 -> Loss: 2.0136, Val F1: 0.0546, Val Acc: 0.1579

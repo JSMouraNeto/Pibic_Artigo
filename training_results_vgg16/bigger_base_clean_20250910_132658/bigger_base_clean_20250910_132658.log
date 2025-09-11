@@ -1,0 +1,75 @@
+2025-09-10 13:27:00,716 - INFO - Usando dispositivo: cuda
+2025-09-10 13:27:00,829 - INFO - Dataset dividido: 20958 treino, 6986 validação, 6987 teste.
+2025-09-10 13:27:01,873 - INFO - --- Iniciando Treinamento com VGG16 ---
+2025-09-10 13:29:26,816 - INFO - Epoch 1/25: Train Loss: 1.0398, Val F1-Macro: 0.7533
+2025-09-10 13:29:27,191 - INFO - Modelo salvo! Novo melhor Val F1-Score: 0.7533
+2025-09-10 13:31:52,135 - INFO - Epoch 2/25: Train Loss: 0.8775, Val F1-Macro: 0.8110
+2025-09-10 13:31:52,754 - INFO - Modelo salvo! Novo melhor Val F1-Score: 0.8110
+2025-09-10 13:34:17,625 - INFO - Epoch 3/25: Train Loss: 0.8207, Val F1-Macro: 0.7921
+2025-09-10 13:36:42,462 - INFO - Epoch 4/25: Train Loss: 0.7645, Val F1-Macro: 0.7667
+2025-09-10 13:39:07,376 - INFO - Epoch 5/25: Train Loss: 0.7750, Val F1-Macro: 0.8234
+2025-09-10 13:39:08,024 - INFO - Modelo salvo! Novo melhor Val F1-Score: 0.8234
+2025-09-10 13:41:32,902 - INFO - Epoch 6/25: Train Loss: 0.7328, Val F1-Macro: 0.8276
+2025-09-10 13:41:33,432 - INFO - Modelo salvo! Novo melhor Val F1-Score: 0.8276
+2025-09-10 13:43:58,319 - INFO - Epoch 7/25: Train Loss: 0.7082, Val F1-Macro: 0.8270
+2025-09-10 13:46:23,162 - INFO - Epoch 8/25: Train Loss: 0.7482, Val F1-Macro: 0.8150
+2025-09-10 13:48:48,053 - INFO - Epoch 9/25: Train Loss: 0.7172, Val F1-Macro: 0.8130
+2025-09-10 13:51:12,923 - INFO - Epoch 10/25: Train Loss: 0.7172, Val F1-Macro: 0.7563
+2025-09-10 13:53:37,981 - INFO - Epoch 11/25: Train Loss: 0.7182, Val F1-Macro: 0.7152
+2025-09-10 13:56:03,009 - INFO - Epoch 12/25: Train Loss: 0.7139, Val F1-Macro: 0.8456
+2025-09-10 13:56:03,567 - INFO - Modelo salvo! Novo melhor Val F1-Score: 0.8456
+2025-09-10 13:58:28,535 - INFO - Epoch 13/25: Train Loss: 0.6845, Val F1-Macro: 0.8473
+2025-09-10 13:58:29,064 - INFO - Modelo salvo! Novo melhor Val F1-Score: 0.8473
+2025-09-10 14:00:53,999 - INFO - Epoch 14/25: Train Loss: 0.6897, Val F1-Macro: 0.7116
+2025-09-10 14:03:37,481 - INFO - Epoch 15/25: Train Loss: 0.6979, Val F1-Macro: 0.8131
+2025-09-10 14:06:02,081 - INFO - Epoch 16/25: Train Loss: 0.7236, Val F1-Macro: 0.8020
+2025-09-10 14:08:26,823 - INFO - Epoch 17/25: Train Loss: 0.7010, Val F1-Macro: 0.7355
+2025-09-10 14:10:51,496 - INFO - Epoch 18/25: Train Loss: 0.6935, Val F1-Macro: 0.8393
+2025-09-10 14:13:16,154 - INFO - Epoch 19/25: Train Loss: 0.6815, Val F1-Macro: 0.8261
+2025-09-10 14:15:40,814 - INFO - Epoch 20/25: Train Loss: 0.6706, Val F1-Macro: 0.7232
+2025-09-10 14:18:05,367 - INFO - Epoch 21/25: Train Loss: 0.6959, Val F1-Macro: 0.8421
+2025-09-10 14:20:29,904 - INFO - Epoch 22/25: Train Loss: 0.6853, Val F1-Macro: 0.8463
+2025-09-10 14:22:54,501 - INFO - Epoch 23/25: Train Loss: 0.6858, Val F1-Macro: 0.8335
+2025-09-10 14:25:18,940 - INFO - Epoch 24/25: Train Loss: 0.6511, Val F1-Macro: 0.8579
+2025-09-10 14:25:19,461 - INFO - Modelo salvo! Novo melhor Val F1-Score: 0.8579
+2025-09-10 14:27:44,018 - INFO - Epoch 25/25: Train Loss: 0.6769, Val F1-Macro: 0.8423
+2025-09-10 14:27:44,018 - INFO - 
+--- Avaliação Final no Conjunto de Teste ---
+2025-09-10 14:28:12,838 - INFO - 
+Relatório de Classificação:
+                     precision    recall  f1-score   support
+
+              COVID       0.94      0.95      0.95      1449
+       Lung_Opacity       0.85      0.87      0.86      1203
+             Normal       0.91      0.88      0.89      2038
+pneumonia_bacterial       0.89      0.71      0.79      1104
+    Viral Pneumonia       0.75      0.91      0.82      1193
+
+           accuracy                           0.87      6987
+          macro avg       0.87      0.86      0.86      6987
+       weighted avg       0.88      0.87      0.87      6987
+
+2025-09-10 14:28:12,925 - INFO - Matriz de confusão salva em: training_results_vgg16/bigger_base_clean_20250910_132658/bigger_base_clean_confusion_matrix.png
+2025-09-10 14:28:12,925 - INFO - 
+--- Gerando visualizações Grad-CAM ---
+2025-09-10 14:28:12,925 - INFO - Gerando Grad-CAM para 1 exemplo(s) de cada classe...
+2025-09-10 14:28:13,228 - CRITICAL - Ocorreu um erro fatal: mean() received an invalid combination of arguments - got (NoneType, dim=list), but expected one of:
+ * (Tensor input, *, torch.dtype dtype = None, Tensor out = None)
+ * (Tensor input, tuple of ints dim, bool keepdim = False, *, torch.dtype dtype = None, Tensor out = None)
+ * (Tensor input, tuple of names dim, bool keepdim = False, *, torch.dtype dtype = None, Tensor out = None)
+Traceback (most recent call last):
+  File "/home/mob4ai-001/Pibic_Artigo/algoritimosTreinamento/train_vgg16.py", line 421, in <module>
+    train_and_evaluate(run_args, logger)
+  File "/home/mob4ai-001/Pibic_Artigo/algoritimosTreinamento/train_vgg16.py", line 359, in train_and_evaluate
+    visualize_and_save_grad_cam(
+  File "/home/mob4ai-001/Pibic_Artigo/algoritimosTreinamento/train_vgg16.py", line 231, in visualize_and_save_grad_cam
+    heatmap = grad_cam(img_tensor, class_idx=true_label_idx)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mob4ai-001/Pibic_Artigo/algoritimosTreinamento/train_vgg16.py", line 185, in __call__
+    pooled_gradients = torch.mean(self.gradients, dim=[0, 2, 3])
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: mean() received an invalid combination of arguments - got (NoneType, dim=list), but expected one of:
+ * (Tensor input, *, torch.dtype dtype = None, Tensor out = None)
+ * (Tensor input, tuple of ints dim, bool keepdim = False, *, torch.dtype dtype = None, Tensor out = None)
+ * (Tensor input, tuple of names dim, bool keepdim = False, *, torch.dtype dtype = None, Tensor out = None)
+

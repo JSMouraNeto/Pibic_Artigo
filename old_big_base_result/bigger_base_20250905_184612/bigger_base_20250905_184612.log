@@ -1,0 +1,62 @@
+2025-09-05 18:46:13,071 - INFO - Dataset dividido: 19501 treino, 6501 validação, 6501 teste.
+2025-09-05 18:46:13,379 - INFO - --- Iniciando Treinamento com ResNet-50 SNN-Ready ---
+2025-09-05 18:47:50,810 - INFO - Epoch 1: Train Loss: 0.5258, Val F1-Macro: 0.8272
+2025-09-05 18:47:50,871 - INFO - Modelo salvo! Novo melhor F1-Score: 0.8272
+2025-09-05 18:49:28,099 - INFO - Epoch 2: Train Loss: 0.3712, Val F1-Macro: 0.8445
+2025-09-05 18:49:28,189 - INFO - Modelo salvo! Novo melhor F1-Score: 0.8445
+2025-09-05 18:51:05,452 - INFO - Epoch 3: Train Loss: 0.3219, Val F1-Macro: 0.8602
+2025-09-05 18:51:05,552 - INFO - Modelo salvo! Novo melhor F1-Score: 0.8602
+2025-09-05 18:52:42,897 - INFO - Epoch 4: Train Loss: 0.3073, Val F1-Macro: 0.8852
+2025-09-05 18:52:42,991 - INFO - Modelo salvo! Novo melhor F1-Score: 0.8852
+2025-09-05 18:54:20,307 - INFO - Epoch 5: Train Loss: 0.2866, Val F1-Macro: 0.8973
+2025-09-05 18:54:20,400 - INFO - Modelo salvo! Novo melhor F1-Score: 0.8973
+2025-09-05 18:55:57,633 - INFO - Epoch 6: Train Loss: 0.2617, Val F1-Macro: 0.8840
+2025-09-05 18:57:34,900 - INFO - Epoch 7: Train Loss: 0.2521, Val F1-Macro: 0.9011
+2025-09-05 18:57:35,005 - INFO - Modelo salvo! Novo melhor F1-Score: 0.9011
+2025-09-05 18:59:12,254 - INFO - Epoch 8: Train Loss: 0.2351, Val F1-Macro: 0.8691
+2025-09-05 19:00:49,501 - INFO - Epoch 9: Train Loss: 0.2188, Val F1-Macro: 0.9043
+2025-09-05 19:00:49,601 - INFO - Modelo salvo! Novo melhor F1-Score: 0.9043
+2025-09-05 19:02:26,826 - INFO - Epoch 10: Train Loss: 0.2145, Val F1-Macro: 0.9103
+2025-09-05 19:02:26,920 - INFO - Modelo salvo! Novo melhor F1-Score: 0.9103
+2025-09-05 19:04:04,122 - INFO - Epoch 11: Train Loss: 0.1997, Val F1-Macro: 0.9104
+2025-09-05 19:04:04,236 - INFO - Modelo salvo! Novo melhor F1-Score: 0.9104
+2025-09-05 19:05:41,435 - INFO - Epoch 12: Train Loss: 0.1852, Val F1-Macro: 0.9182
+2025-09-05 19:05:41,527 - INFO - Modelo salvo! Novo melhor F1-Score: 0.9182
+2025-09-05 19:07:18,737 - INFO - Epoch 13: Train Loss: 0.1728, Val F1-Macro: 0.9210
+2025-09-05 19:07:18,830 - INFO - Modelo salvo! Novo melhor F1-Score: 0.9210
+2025-09-05 19:08:56,039 - INFO - Epoch 14: Train Loss: 0.1716, Val F1-Macro: 0.9228
+2025-09-05 19:08:56,142 - INFO - Modelo salvo! Novo melhor F1-Score: 0.9228
+2025-09-05 19:10:33,357 - INFO - Epoch 15: Train Loss: 0.1555, Val F1-Macro: 0.9192
+2025-09-05 19:12:10,600 - INFO - Epoch 16: Train Loss: 0.1522, Val F1-Macro: 0.9278
+2025-09-05 19:12:10,694 - INFO - Modelo salvo! Novo melhor F1-Score: 0.9278
+2025-09-05 19:13:47,983 - INFO - Epoch 17: Train Loss: 0.1426, Val F1-Macro: 0.9294
+2025-09-05 19:13:48,084 - INFO - Modelo salvo! Novo melhor F1-Score: 0.9294
+2025-09-05 19:15:25,381 - INFO - Epoch 18: Train Loss: 0.1388, Val F1-Macro: 0.9291
+2025-09-05 19:17:02,646 - INFO - Epoch 19: Train Loss: 0.1288, Val F1-Macro: 0.9202
+2025-09-05 19:18:39,901 - INFO - Epoch 20: Train Loss: 0.1248, Val F1-Macro: 0.9347
+2025-09-05 19:18:39,992 - INFO - Modelo salvo! Novo melhor F1-Score: 0.9347
+2025-09-05 19:20:17,245 - INFO - Epoch 21: Train Loss: 0.1216, Val F1-Macro: 0.9253
+2025-09-05 19:21:54,578 - INFO - Epoch 22: Train Loss: 0.1086, Val F1-Macro: 0.9322
+2025-09-05 19:23:31,935 - INFO - Epoch 23: Train Loss: 0.1152, Val F1-Macro: 0.9397
+2025-09-05 19:23:32,020 - INFO - Modelo salvo! Novo melhor F1-Score: 0.9397
+2025-09-05 19:25:09,328 - INFO - Epoch 24: Train Loss: 0.1060, Val F1-Macro: 0.9386
+2025-09-05 19:26:46,673 - INFO - Epoch 25: Train Loss: 0.1014, Val F1-Macro: 0.9421
+2025-09-05 19:26:46,758 - INFO - Modelo salvo! Novo melhor F1-Score: 0.9421
+2025-09-05 19:26:46,758 - INFO - 
+--- Avaliação Final no Conjunto de Teste ---
+2025-09-05 19:27:01,761 - INFO - 
+                 precision    recall  f1-score   support
+
+          COVID       0.99      0.99      0.99      1464
+   Lung_Opacity       0.94      0.84      0.89      1803
+         Normal       0.92      0.97      0.94      2038
+Viral Pneumonia       0.90      0.97      0.93      1196
+
+       accuracy                           0.94      6501
+      macro avg       0.94      0.94      0.94      6501
+   weighted avg       0.94      0.94      0.94      6501
+
+2025-09-05 19:27:01,824 - INFO - 
+--- Gerando visualizações Grad-CAM ---
+2025-09-05 19:27:01,824 - INFO - Procurando por 4 exemplos de cada classe para Grad-CAM...
+2025-09-05 19:27:02,519 - INFO - Imagens Grad-CAM salvas em 'SNNReadyResNet50_Results/bigger_base_20250905_184612/grad_cam_results'.

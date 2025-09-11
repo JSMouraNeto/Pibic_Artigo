@@ -1,0 +1,59 @@
+2025-09-10 14:42:10,577 - INFO - Parâmetros: LR=0.01, Dropout=0.3, Batch=8, Optimizer=adamw, Hidden=2048, Aug=light
+2025-09-10 14:42:10,577 - INFO - Usando dispositivo: cuda
+2025-09-10 14:42:10,684 - INFO - Dataset dividido em: 20958 treino, 6986 validação, 6987 teste.
+2025-09-10 14:44:27,546 - INFO - Epoch 1/50 -> Loss: 4.4398, Val F1: 0.0569, Val Acc: 0.1592
+2025-09-10 14:44:27,546 - INFO - 🎉 Novo melhor F1-Score de validação: 0.0569
+2025-09-10 14:46:43,546 - INFO - Epoch 2/50 -> Loss: nan, Val F1: 0.0570, Val Acc: 0.1592
+2025-09-10 14:46:43,546 - INFO - 🎉 Novo melhor F1-Score de validação: 0.0570
+2025-09-10 14:48:59,527 - INFO - Epoch 3/50 -> Loss: 2.5007, Val F1: 0.0549, Val Acc: 0.1582
+2025-09-10 14:51:15,465 - INFO - Epoch 4/50 -> Loss: nan, Val F1: 0.0552, Val Acc: 0.1583
+2025-09-10 14:53:31,403 - INFO - Epoch 5/50 -> Loss: 4.8196, Val F1: 0.0584, Val Acc: 0.1708
+2025-09-10 14:53:31,403 - INFO - 🎉 Novo melhor F1-Score de validação: 0.0584
+2025-09-10 14:55:47,332 - INFO - Epoch 6/50 -> Loss: 5.7119, Val F1: 0.0597, Val Acc: 0.1725
+2025-09-10 14:55:47,332 - INFO - 🎉 Novo melhor F1-Score de validação: 0.0597
+2025-09-10 14:58:03,257 - INFO - Epoch 7/50 -> Loss: 5.8267, Val F1: 0.0583, Val Acc: 0.1708
+2025-09-10 15:00:19,167 - INFO - Epoch 8/50 -> Loss: 2.3393, Val F1: 0.0546, Val Acc: 0.1580
+2025-09-10 15:02:35,077 - INFO - Epoch 9/50 -> Loss: 1.5972, Val F1: 0.0546, Val Acc: 0.1580
+2025-09-10 15:04:50,962 - INFO - Epoch 10/50 -> Loss: nan, Val F1: 0.0546, Val Acc: 0.1580
+2025-09-10 15:07:06,830 - INFO - Epoch 11/50 -> Loss: nan, Val F1: 0.0546, Val Acc: 0.1580
+2025-09-10 15:09:22,692 - INFO - Epoch 12/50 -> Loss: nan, Val F1: 0.0546, Val Acc: 0.1580
+2025-09-10 15:11:38,506 - INFO - Epoch 13/50 -> Loss: nan, Val F1: 0.0583, Val Acc: 0.1708
+2025-09-10 15:13:54,330 - INFO - Epoch 14/50 -> Loss: nan, Val F1: 0.0546, Val Acc: 0.1580
+2025-09-10 15:16:10,148 - INFO - Epoch 15/50 -> Loss: nan, Val F1: 0.0546, Val Acc: 0.1580
+2025-09-10 15:18:25,977 - INFO - Epoch 16/50 -> Loss: nan, Val F1: 0.0546, Val Acc: 0.1580
+2025-09-10 15:20:41,810 - INFO - Epoch 17/50 -> Loss: nan, Val F1: 0.0546, Val Acc: 0.1580
+2025-09-10 15:22:57,625 - INFO - Epoch 18/50 -> Loss: nan, Val F1: 0.0546, Val Acc: 0.1580
+2025-09-10 15:25:13,396 - INFO - Epoch 19/50 -> Loss: nan, Val F1: 0.0583, Val Acc: 0.1708
+2025-09-10 15:27:29,244 - INFO - Epoch 20/50 -> Loss: 1.7031, Val F1: 0.0546, Val Acc: 0.1580
+2025-09-10 15:29:45,065 - INFO - Epoch 21/50 -> Loss: nan, Val F1: 0.0546, Val Acc: 0.1580
+2025-09-10 15:32:00,886 - INFO - Epoch 22/50 -> Loss: 1.5948, Val F1: 0.0546, Val Acc: 0.1580
+2025-09-10 15:34:16,633 - INFO - Epoch 23/50 -> Loss: nan, Val F1: 0.0546, Val Acc: 0.1580
+2025-09-10 15:36:32,356 - INFO - Epoch 24/50 -> Loss: nan, Val F1: 0.0546, Val Acc: 0.1580
+2025-09-10 15:38:48,066 - INFO - Epoch 25/50 -> Loss: nan, Val F1: 0.0583, Val Acc: 0.1708
+2025-09-10 15:41:03,826 - INFO - Epoch 26/50 -> Loss: nan, Val F1: 0.0587, Val Acc: 0.1721
+2025-09-10 15:43:19,549 - INFO - Epoch 27/50 -> Loss: nan, Val F1: 0.0546, Val Acc: 0.1580
+2025-09-10 15:45:35,306 - INFO - Epoch 28/50 -> Loss: 1.5955, Val F1: 0.0546, Val Acc: 0.1580
+2025-09-10 15:47:51,023 - INFO - Epoch 29/50 -> Loss: nan, Val F1: 0.0546, Val Acc: 0.1580
+2025-09-10 15:50:06,697 - INFO - Epoch 30/50 -> Loss: nan, Val F1: 0.0546, Val Acc: 0.1580
+2025-09-10 15:52:22,358 - INFO - Epoch 31/50 -> Loss: nan, Val F1: 0.0546, Val Acc: 0.1580
+2025-09-10 15:54:37,958 - INFO - Epoch 32/50 -> Loss: nan, Val F1: 0.0546, Val Acc: 0.1580
+2025-09-10 15:56:53,567 - INFO - Epoch 33/50 -> Loss: nan, Val F1: 0.0546, Val Acc: 0.1580
+2025-09-10 15:59:09,150 - INFO - Epoch 34/50 -> Loss: 1.5960, Val F1: 0.0546, Val Acc: 0.1580
+2025-09-10 16:01:24,681 - INFO - Epoch 35/50 -> Loss: nan, Val F1: 0.0546, Val Acc: 0.1580
+2025-09-10 16:03:40,239 - INFO - Epoch 36/50 -> Loss: nan, Val F1: 0.0546, Val Acc: 0.1580
+2025-09-10 16:05:55,842 - INFO - Epoch 37/50 -> Loss: 1.5987, Val F1: 0.0546, Val Acc: 0.1580
+2025-09-10 16:08:11,470 - INFO - Epoch 38/50 -> Loss: 1.5970, Val F1: 0.0546, Val Acc: 0.1580
+2025-09-10 16:10:27,067 - INFO - Epoch 39/50 -> Loss: 1.5937, Val F1: 0.0546, Val Acc: 0.1580
+2025-09-10 16:12:42,609 - INFO - Epoch 40/50 -> Loss: nan, Val F1: 0.0546, Val Acc: 0.1580
+2025-09-10 16:14:58,203 - INFO - Epoch 41/50 -> Loss: 1.7149, Val F1: 0.0546, Val Acc: 0.1580
+2025-09-10 16:17:13,764 - INFO - Epoch 42/50 -> Loss: nan, Val F1: 0.0546, Val Acc: 0.1580
+2025-09-10 16:19:29,361 - INFO - Epoch 43/50 -> Loss: 1.5921, Val F1: 0.0546, Val Acc: 0.1580
+2025-09-10 16:21:44,814 - INFO - Epoch 44/50 -> Loss: nan, Val F1: 0.0546, Val Acc: 0.1580
+2025-09-10 16:24:00,414 - INFO - Epoch 45/50 -> Loss: 1.5989, Val F1: 0.0546, Val Acc: 0.1580
+2025-09-10 16:26:15,998 - INFO - Epoch 46/50 -> Loss: nan, Val F1: 0.0546, Val Acc: 0.1580
+2025-09-10 16:28:31,619 - INFO - Epoch 47/50 -> Loss: nan, Val F1: 0.0546, Val Acc: 0.1580
+2025-09-10 16:30:47,276 - INFO - Epoch 48/50 -> Loss: 1.6713, Val F1: 0.0546, Val Acc: 0.1580
+2025-09-10 16:33:02,852 - INFO - Epoch 49/50 -> Loss: nan, Val F1: 0.0546, Val Acc: 0.1580
+2025-09-10 16:35:18,413 - INFO - Epoch 50/50 -> Loss: nan, Val F1: 0.0546, Val Acc: 0.1580
+2025-09-10 16:35:18,414 - INFO - 
+--- Avaliação Final no Conjunto de Teste ---

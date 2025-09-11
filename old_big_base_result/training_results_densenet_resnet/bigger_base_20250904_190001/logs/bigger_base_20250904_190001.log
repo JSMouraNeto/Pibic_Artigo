@@ -1,0 +1,277 @@
+2025-09-04 19:00:01,641 - INFO - 
+========================= INICIANDO EXPERIMENTO PARA: BIGGER_BASE =========================
+2025-09-04 19:00:01,848 - INFO - --- Iniciando Validação Cruzada com 5 Folds ---
+2025-09-04 19:00:01,850 - INFO - 
+=============== FOLD 1/5 ===============
+2025-09-04 19:03:38,220 - INFO - Fold 1 Epoch 1: Train Loss: 0.5508, Val F1: 0.8243
+2025-09-04 19:07:13,923 - INFO - Fold 1 Epoch 2: Train Loss: 0.4433, Val F1: 0.7670
+2025-09-04 19:10:49,490 - INFO - Fold 1 Epoch 3: Train Loss: 0.3940, Val F1: 0.8643
+2025-09-04 19:14:25,187 - INFO - Fold 1 Epoch 4: Train Loss: 0.3708, Val F1: 0.8874
+2025-09-04 19:18:01,015 - INFO - Fold 1 Epoch 5: Train Loss: 0.3463, Val F1: 0.8647
+2025-09-04 19:21:36,417 - INFO - Fold 1 Epoch 6: Train Loss: 0.3344, Val F1: 0.8920
+2025-09-04 19:25:11,943 - INFO - Fold 1 Epoch 7: Train Loss: 0.3040, Val F1: 0.8910
+2025-09-04 19:28:47,403 - INFO - Fold 1 Epoch 8: Train Loss: 0.2973, Val F1: 0.9007
+2025-09-04 19:32:22,944 - INFO - Fold 1 Epoch 9: Train Loss: 0.2827, Val F1: 0.8956
+2025-09-04 19:35:58,358 - INFO - Fold 1 Epoch 10: Train Loss: 0.2669, Val F1: 0.9060
+2025-09-04 19:39:33,943 - INFO - Fold 1 Epoch 11: Train Loss: 0.2764, Val F1: 0.9137
+2025-09-04 19:43:09,328 - INFO - Fold 1 Epoch 12: Train Loss: 0.2490, Val F1: 0.8891
+2025-09-04 19:46:44,463 - INFO - Fold 1 Epoch 13: Train Loss: 0.2502, Val F1: 0.9176
+2025-09-04 19:50:19,942 - INFO - Fold 1 Epoch 14: Train Loss: 0.2500, Val F1: 0.9065
+2025-09-04 19:53:55,151 - INFO - Fold 1 Epoch 15: Train Loss: 0.2308, Val F1: 0.8984
+2025-09-04 19:57:30,287 - INFO - Fold 1 Epoch 16: Train Loss: 0.2240, Val F1: 0.9208
+2025-09-04 20:01:05,629 - INFO - Fold 1 Epoch 17: Train Loss: 0.2115, Val F1: 0.9207
+2025-09-04 20:04:40,890 - INFO - Fold 1 Epoch 18: Train Loss: 0.2099, Val F1: 0.9130
+2025-09-04 20:08:16,171 - INFO - Fold 1 Epoch 19: Train Loss: 0.2084, Val F1: 0.9167
+2025-09-04 20:11:51,341 - INFO - Fold 1 Epoch 20: Train Loss: 0.1956, Val F1: 0.9222
+2025-09-04 20:15:27,010 - INFO - Fold 1 Epoch 21: Train Loss: 0.1975, Val F1: 0.9225
+2025-09-04 20:19:02,305 - INFO - Fold 1 Epoch 22: Train Loss: 0.1897, Val F1: 0.9339
+2025-09-04 20:22:37,597 - INFO - Fold 1 Epoch 23: Train Loss: 0.1922, Val F1: 0.9348
+2025-09-04 20:26:12,849 - INFO - Fold 1 Epoch 24: Train Loss: 0.1825, Val F1: 0.9284
+2025-09-04 20:29:47,933 - INFO - Fold 1 Epoch 25: Train Loss: 0.1688, Val F1: 0.9283
+2025-09-04 20:33:22,945 - INFO - Fold 1 Epoch 26: Train Loss: 0.1776, Val F1: 0.9298
+2025-09-04 20:36:58,046 - INFO - Fold 1 Epoch 27: Train Loss: 0.1639, Val F1: 0.9370
+2025-09-04 20:40:33,425 - INFO - Fold 1 Epoch 28: Train Loss: 0.1709, Val F1: 0.9379
+2025-09-04 20:44:08,921 - INFO - Fold 1 Epoch 29: Train Loss: 0.1579, Val F1: 0.9381
+2025-09-04 20:47:44,268 - INFO - Fold 1 Epoch 30: Train Loss: 0.1536, Val F1: 0.9437
+2025-09-04 20:51:19,560 - INFO - Fold 1 Epoch 31: Train Loss: 0.1450, Val F1: 0.9390
+2025-09-04 20:54:54,679 - INFO - Fold 1 Epoch 32: Train Loss: 0.1442, Val F1: 0.9379
+2025-09-04 20:58:29,704 - INFO - Fold 1 Epoch 33: Train Loss: 0.1385, Val F1: 0.9353
+2025-09-04 21:02:04,787 - INFO - Fold 1 Epoch 34: Train Loss: 0.1409, Val F1: 0.9418
+2025-09-04 21:05:40,409 - INFO - Fold 1 Epoch 35: Train Loss: 0.1413, Val F1: 0.9457
+2025-09-04 21:09:15,844 - INFO - Fold 1 Epoch 36: Train Loss: 0.1288, Val F1: 0.9337
+2025-09-04 21:12:50,960 - INFO - Fold 1 Epoch 37: Train Loss: 0.1316, Val F1: 0.9331
+2025-09-04 21:16:25,987 - INFO - Fold 1 Epoch 38: Train Loss: 0.1347, Val F1: 0.9359
+2025-09-04 21:20:00,867 - INFO - Fold 1 Epoch 39: Train Loss: 0.1284, Val F1: 0.9462
+2025-09-04 21:23:35,876 - INFO - Fold 1 Epoch 40: Train Loss: 0.1195, Val F1: 0.9345
+2025-09-04 21:27:10,729 - INFO - Fold 1 Epoch 41: Train Loss: 0.1254, Val F1: 0.9405
+2025-09-04 21:30:45,594 - INFO - Fold 1 Epoch 42: Train Loss: 0.1220, Val F1: 0.9432
+2025-09-04 21:34:20,375 - INFO - Fold 1 Epoch 43: Train Loss: 0.1145, Val F1: 0.9437
+2025-09-04 21:37:55,207 - INFO - Fold 1 Epoch 44: Train Loss: 0.1253, Val F1: 0.9441
+2025-09-04 21:41:29,970 - INFO - Fold 1 Epoch 45: Train Loss: 0.1122, Val F1: 0.9483
+2025-09-04 21:45:04,889 - INFO - Fold 1 Epoch 46: Train Loss: 0.1107, Val F1: 0.9405
+2025-09-04 21:48:39,685 - INFO - Fold 1 Epoch 47: Train Loss: 0.0993, Val F1: 0.9354
+2025-09-04 21:52:14,426 - INFO - Fold 1 Epoch 48: Train Loss: 0.1121, Val F1: 0.9474
+2025-09-04 21:55:49,198 - INFO - Fold 1 Epoch 49: Train Loss: 0.1014, Val F1: 0.9482
+2025-09-04 21:59:23,870 - INFO - Fold 1 Epoch 50: Train Loss: 0.1110, Val F1: 0.9407
+2025-09-04 21:59:23,977 - INFO - 
+=============== FOLD 2/5 ===============
+2025-09-04 22:03:00,022 - INFO - Fold 2 Epoch 1: Train Loss: 0.5426, Val F1: 0.8424
+2025-09-04 22:06:36,112 - INFO - Fold 2 Epoch 2: Train Loss: 0.4321, Val F1: 0.8590
+2025-09-04 22:10:12,396 - INFO - Fold 2 Epoch 3: Train Loss: 0.3946, Val F1: 0.8630
+2025-09-04 22:13:48,616 - INFO - Fold 2 Epoch 4: Train Loss: 0.3585, Val F1: 0.8706
+2025-09-04 22:17:24,939 - INFO - Fold 2 Epoch 5: Train Loss: 0.3439, Val F1: 0.8743
+2025-09-04 22:21:01,077 - INFO - Fold 2 Epoch 6: Train Loss: 0.3129, Val F1: 0.8954
+2025-09-04 22:24:37,088 - INFO - Fold 2 Epoch 7: Train Loss: 0.2964, Val F1: 0.8720
+2025-09-04 22:28:12,907 - INFO - Fold 2 Epoch 8: Train Loss: 0.2925, Val F1: 0.8939
+2025-09-04 22:31:48,598 - INFO - Fold 2 Epoch 9: Train Loss: 0.2732, Val F1: 0.8899
+2025-09-04 22:35:23,967 - INFO - Fold 2 Epoch 10: Train Loss: 0.2684, Val F1: 0.8910
+2025-09-04 22:38:59,269 - INFO - Fold 2 Epoch 11: Train Loss: 0.2504, Val F1: 0.8881
+2025-09-04 22:42:34,655 - INFO - Fold 2 Epoch 12: Train Loss: 0.2459, Val F1: 0.9003
+2025-09-04 22:46:10,186 - INFO - Fold 2 Epoch 13: Train Loss: 0.2445, Val F1: 0.9183
+2025-09-04 22:49:45,801 - INFO - Fold 2 Epoch 14: Train Loss: 0.2185, Val F1: 0.9133
+2025-09-04 22:53:21,416 - INFO - Fold 2 Epoch 15: Train Loss: 0.2175, Val F1: 0.9052
+2025-09-04 22:56:57,183 - INFO - Fold 2 Epoch 16: Train Loss: 0.2159, Val F1: 0.9142
+2025-09-04 23:00:33,010 - INFO - Fold 2 Epoch 17: Train Loss: 0.2122, Val F1: 0.9136
+2025-09-04 23:04:08,771 - INFO - Fold 2 Epoch 18: Train Loss: 0.2058, Val F1: 0.9268
+2025-09-04 23:07:44,437 - INFO - Fold 2 Epoch 19: Train Loss: 0.1934, Val F1: 0.9312
+2025-09-04 23:11:20,205 - INFO - Fold 2 Epoch 20: Train Loss: 0.1787, Val F1: 0.9196
+2025-09-04 23:14:55,794 - INFO - Fold 2 Epoch 21: Train Loss: 0.1879, Val F1: 0.9189
+2025-09-04 23:18:31,434 - INFO - Fold 2 Epoch 22: Train Loss: 0.1703, Val F1: 0.9269
+2025-09-04 23:22:06,931 - INFO - Fold 2 Epoch 23: Train Loss: 0.1879, Val F1: 0.9203
+2025-09-04 23:25:42,426 - INFO - Fold 2 Epoch 24: Train Loss: 0.1659, Val F1: 0.9272
+2025-09-04 23:29:17,906 - INFO - Fold 2 Epoch 25: Train Loss: 0.1760, Val F1: 0.9319
+2025-09-04 23:32:53,447 - INFO - Fold 2 Epoch 26: Train Loss: 0.1614, Val F1: 0.9181
+2025-09-04 23:36:28,833 - INFO - Fold 2 Epoch 27: Train Loss: 0.1668, Val F1: 0.9278
+2025-09-04 23:40:04,260 - INFO - Fold 2 Epoch 28: Train Loss: 0.1471, Val F1: 0.9401
+2025-09-04 23:43:39,827 - INFO - Fold 2 Epoch 29: Train Loss: 0.1501, Val F1: 0.9123
+2025-09-04 23:47:15,304 - INFO - Fold 2 Epoch 30: Train Loss: 0.1459, Val F1: 0.9320
+2025-09-04 23:50:50,803 - INFO - Fold 2 Epoch 31: Train Loss: 0.1429, Val F1: 0.9319
+2025-09-04 23:54:26,420 - INFO - Fold 2 Epoch 32: Train Loss: 0.1373, Val F1: 0.9419
+2025-09-04 23:58:02,287 - INFO - Fold 2 Epoch 33: Train Loss: 0.1407, Val F1: 0.9284
+2025-09-05 00:01:37,797 - INFO - Fold 2 Epoch 34: Train Loss: 0.1270, Val F1: 0.9387
+2025-09-05 00:05:13,403 - INFO - Fold 2 Epoch 35: Train Loss: 0.1266, Val F1: 0.9292
+2025-09-05 00:08:48,811 - INFO - Fold 2 Epoch 36: Train Loss: 0.1308, Val F1: 0.9412
+2025-09-05 00:12:24,249 - INFO - Fold 2 Epoch 37: Train Loss: 0.1222, Val F1: 0.9363
+2025-09-05 00:15:59,591 - INFO - Fold 2 Epoch 38: Train Loss: 0.1343, Val F1: 0.9443
+2025-09-05 00:19:35,299 - INFO - Fold 2 Epoch 39: Train Loss: 0.1212, Val F1: 0.9377
+2025-09-05 00:23:10,953 - INFO - Fold 2 Epoch 40: Train Loss: 0.1170, Val F1: 0.9393
+2025-09-05 00:26:46,379 - INFO - Fold 2 Epoch 41: Train Loss: 0.1103, Val F1: 0.9482
+2025-09-05 00:30:22,022 - INFO - Fold 2 Epoch 42: Train Loss: 0.1137, Val F1: 0.9427
+2025-09-05 00:33:57,442 - INFO - Fold 2 Epoch 43: Train Loss: 0.1056, Val F1: 0.9458
+2025-09-05 00:37:32,938 - INFO - Fold 2 Epoch 44: Train Loss: 0.1032, Val F1: 0.9437
+2025-09-05 00:41:08,388 - INFO - Fold 2 Epoch 45: Train Loss: 0.1023, Val F1: 0.9455
+2025-09-05 00:44:43,787 - INFO - Fold 2 Epoch 46: Train Loss: 0.1121, Val F1: 0.9251
+2025-09-05 00:48:19,077 - INFO - Fold 2 Epoch 47: Train Loss: 0.0984, Val F1: 0.9507
+2025-09-05 00:51:54,555 - INFO - Fold 2 Epoch 48: Train Loss: 0.0958, Val F1: 0.9272
+2025-09-05 00:55:29,784 - INFO - Fold 2 Epoch 49: Train Loss: 0.0920, Val F1: 0.8958
+2025-09-05 00:59:04,951 - INFO - Fold 2 Epoch 50: Train Loss: 0.0879, Val F1: 0.9441
+2025-09-05 00:59:05,058 - INFO - 
+=============== FOLD 3/5 ===============
+2025-09-05 01:02:42,107 - INFO - Fold 3 Epoch 1: Train Loss: 0.5529, Val F1: 0.8377
+2025-09-05 01:06:18,955 - INFO - Fold 3 Epoch 2: Train Loss: 0.4390, Val F1: 0.8386
+2025-09-05 01:09:55,950 - INFO - Fold 3 Epoch 3: Train Loss: 0.3999, Val F1: 0.8933
+2025-09-05 01:13:32,770 - INFO - Fold 3 Epoch 4: Train Loss: 0.3703, Val F1: 0.8886
+2025-09-05 01:17:09,485 - INFO - Fold 3 Epoch 5: Train Loss: 0.3349, Val F1: 0.8478
+2025-09-05 01:20:46,048 - INFO - Fold 3 Epoch 6: Train Loss: 0.3224, Val F1: 0.8763
+2025-09-05 01:24:22,602 - INFO - Fold 3 Epoch 7: Train Loss: 0.3184, Val F1: 0.8840
+2025-09-05 01:27:58,759 - INFO - Fold 3 Epoch 8: Train Loss: 0.2791, Val F1: 0.8700
+2025-09-05 01:31:34,975 - INFO - Fold 3 Epoch 9: Train Loss: 0.2876, Val F1: 0.8877
+2025-09-05 01:35:11,095 - INFO - Fold 3 Epoch 10: Train Loss: 0.2765, Val F1: 0.8767
+2025-09-05 01:38:47,243 - INFO - Fold 3 Epoch 11: Train Loss: 0.2656, Val F1: 0.9052
+2025-09-05 01:42:23,418 - INFO - Fold 3 Epoch 12: Train Loss: 0.2628, Val F1: 0.8993
+2025-09-05 01:45:59,432 - INFO - Fold 3 Epoch 13: Train Loss: 0.2431, Val F1: 0.9093
+2025-09-05 01:49:35,571 - INFO - Fold 3 Epoch 14: Train Loss: 0.2278, Val F1: 0.8978
+2025-09-05 01:53:11,772 - INFO - Fold 3 Epoch 15: Train Loss: 0.2357, Val F1: 0.9118
+2025-09-05 01:56:47,991 - INFO - Fold 3 Epoch 16: Train Loss: 0.2251, Val F1: 0.8949
+2025-09-05 02:00:24,030 - INFO - Fold 3 Epoch 17: Train Loss: 0.2218, Val F1: 0.9217
+2025-09-05 02:04:00,117 - INFO - Fold 3 Epoch 18: Train Loss: 0.2168, Val F1: 0.9128
+2025-09-05 02:07:35,917 - INFO - Fold 3 Epoch 19: Train Loss: 0.2149, Val F1: 0.9157
+2025-09-05 02:11:11,697 - INFO - Fold 3 Epoch 20: Train Loss: 0.1918, Val F1: 0.9132
+2025-09-05 02:14:47,421 - INFO - Fold 3 Epoch 21: Train Loss: 0.1895, Val F1: 0.9116
+2025-09-05 02:18:23,231 - INFO - Fold 3 Epoch 22: Train Loss: 0.1895, Val F1: 0.9234
+2025-09-05 02:21:59,046 - INFO - Fold 3 Epoch 23: Train Loss: 0.1739, Val F1: 0.9131
+2025-09-05 02:25:34,533 - INFO - Fold 3 Epoch 24: Train Loss: 0.1732, Val F1: 0.9255
+2025-09-05 02:29:10,067 - INFO - Fold 3 Epoch 25: Train Loss: 0.1749, Val F1: 0.9272
+2025-09-05 02:32:45,475 - INFO - Fold 3 Epoch 26: Train Loss: 0.1680, Val F1: 0.9260
+2025-09-05 02:36:20,722 - INFO - Fold 3 Epoch 27: Train Loss: 0.1654, Val F1: 0.9259
+2025-09-05 02:39:56,267 - INFO - Fold 3 Epoch 28: Train Loss: 0.1648, Val F1: 0.9393
+2025-09-05 02:43:32,217 - INFO - Fold 3 Epoch 29: Train Loss: 0.1518, Val F1: 0.9332
+2025-09-05 02:47:07,998 - INFO - Fold 3 Epoch 30: Train Loss: 0.1486, Val F1: 0.9268
+2025-09-05 02:50:43,634 - INFO - Fold 3 Epoch 31: Train Loss: 0.1451, Val F1: 0.9253
+2025-09-05 02:54:19,315 - INFO - Fold 3 Epoch 32: Train Loss: 0.1395, Val F1: 0.9367
+2025-09-05 02:57:54,998 - INFO - Fold 3 Epoch 33: Train Loss: 0.1383, Val F1: 0.9274
+2025-09-05 03:01:30,588 - INFO - Fold 3 Epoch 34: Train Loss: 0.1328, Val F1: 0.9346
+2025-09-05 03:05:06,325 - INFO - Fold 3 Epoch 35: Train Loss: 0.1330, Val F1: 0.9399
+2025-09-05 03:08:42,221 - INFO - Fold 3 Epoch 36: Train Loss: 0.1272, Val F1: 0.9238
+2025-09-05 03:12:17,747 - INFO - Fold 3 Epoch 37: Train Loss: 0.1341, Val F1: 0.9360
+2025-09-05 03:15:53,362 - INFO - Fold 3 Epoch 38: Train Loss: 0.1180, Val F1: 0.9389
+2025-09-05 03:19:28,963 - INFO - Fold 3 Epoch 39: Train Loss: 0.1174, Val F1: 0.9348
+2025-09-05 03:23:04,407 - INFO - Fold 3 Epoch 40: Train Loss: 0.1182, Val F1: 0.9418
+2025-09-05 03:26:39,890 - INFO - Fold 3 Epoch 41: Train Loss: 0.1110, Val F1: 0.9396
+2025-09-05 03:30:15,345 - INFO - Fold 3 Epoch 42: Train Loss: 0.1237, Val F1: 0.9438
+2025-09-05 03:33:50,973 - INFO - Fold 3 Epoch 43: Train Loss: 0.1047, Val F1: 0.9401
+2025-09-05 03:37:26,449 - INFO - Fold 3 Epoch 44: Train Loss: 0.1012, Val F1: 0.9329
+2025-09-05 03:41:01,727 - INFO - Fold 3 Epoch 45: Train Loss: 0.1040, Val F1: 0.9372
+2025-09-05 03:44:37,057 - INFO - Fold 3 Epoch 46: Train Loss: 0.1028, Val F1: 0.9272
+2025-09-05 03:48:12,126 - INFO - Fold 3 Epoch 47: Train Loss: 0.1076, Val F1: 0.9338
+2025-09-05 03:51:47,359 - INFO - Fold 3 Epoch 48: Train Loss: 0.0976, Val F1: 0.9450
+2025-09-05 03:55:22,906 - INFO - Fold 3 Epoch 49: Train Loss: 0.1012, Val F1: 0.9364
+2025-09-05 03:58:58,116 - INFO - Fold 3 Epoch 50: Train Loss: 0.0879, Val F1: 0.9468
+2025-09-05 03:58:58,354 - INFO - 
+=============== FOLD 4/5 ===============
+2025-09-05 04:02:35,463 - INFO - Fold 4 Epoch 1: Train Loss: 0.5436, Val F1: 0.7989
+2025-09-05 04:06:12,484 - INFO - Fold 4 Epoch 2: Train Loss: 0.4370, Val F1: 0.8529
+2025-09-05 04:09:49,500 - INFO - Fold 4 Epoch 3: Train Loss: 0.3974, Val F1: 0.8752
+2025-09-05 04:13:26,464 - INFO - Fold 4 Epoch 4: Train Loss: 0.3694, Val F1: 0.8915
+2025-09-05 04:17:03,462 - INFO - Fold 4 Epoch 5: Train Loss: 0.3432, Val F1: 0.8955
+2025-09-05 04:20:40,310 - INFO - Fold 4 Epoch 6: Train Loss: 0.3124, Val F1: 0.8925
+2025-09-05 04:24:17,130 - INFO - Fold 4 Epoch 7: Train Loss: 0.3102, Val F1: 0.8896
+2025-09-05 04:27:53,845 - INFO - Fold 4 Epoch 8: Train Loss: 0.2864, Val F1: 0.8918
+2025-09-05 04:31:30,586 - INFO - Fold 4 Epoch 9: Train Loss: 0.2850, Val F1: 0.9105
+2025-09-05 04:35:07,312 - INFO - Fold 4 Epoch 10: Train Loss: 0.2656, Val F1: 0.8928
+2025-09-05 04:38:43,816 - INFO - Fold 4 Epoch 11: Train Loss: 0.2570, Val F1: 0.9077
+2025-09-05 04:42:20,248 - INFO - Fold 4 Epoch 12: Train Loss: 0.2553, Val F1: 0.9080
+2025-09-05 04:45:56,676 - INFO - Fold 4 Epoch 13: Train Loss: 0.2421, Val F1: 0.9098
+2025-09-05 04:49:32,937 - INFO - Fold 4 Epoch 14: Train Loss: 0.2303, Val F1: 0.8959
+2025-09-05 04:53:09,001 - INFO - Fold 4 Epoch 15: Train Loss: 0.2202, Val F1: 0.9128
+2025-09-05 04:56:44,933 - INFO - Fold 4 Epoch 16: Train Loss: 0.2277, Val F1: 0.9128
+2025-09-05 05:00:20,896 - INFO - Fold 4 Epoch 17: Train Loss: 0.2130, Val F1: 0.9209
+2025-09-05 05:03:56,904 - INFO - Fold 4 Epoch 18: Train Loss: 0.2016, Val F1: 0.8985
+2025-09-05 05:07:32,610 - INFO - Fold 4 Epoch 19: Train Loss: 0.2151, Val F1: 0.9185
+2025-09-05 05:11:08,464 - INFO - Fold 4 Epoch 20: Train Loss: 0.1934, Val F1: 0.9172
+2025-09-05 05:14:44,145 - INFO - Fold 4 Epoch 21: Train Loss: 0.1875, Val F1: 0.9164
+2025-09-05 05:18:19,761 - INFO - Fold 4 Epoch 22: Train Loss: 0.1828, Val F1: 0.9301
+2025-09-05 05:21:55,407 - INFO - Fold 4 Epoch 23: Train Loss: 0.1753, Val F1: 0.9047
+2025-09-05 05:25:30,857 - INFO - Fold 4 Epoch 24: Train Loss: 0.1765, Val F1: 0.9310
+2025-09-05 05:29:06,239 - INFO - Fold 4 Epoch 25: Train Loss: 0.1628, Val F1: 0.9385
+2025-09-05 05:32:41,784 - INFO - Fold 4 Epoch 26: Train Loss: 0.1650, Val F1: 0.9318
+2025-09-05 05:36:17,171 - INFO - Fold 4 Epoch 27: Train Loss: 0.1604, Val F1: 0.9321
+2025-09-05 05:39:52,432 - INFO - Fold 4 Epoch 28: Train Loss: 0.1519, Val F1: 0.9335
+2025-09-05 05:43:27,687 - INFO - Fold 4 Epoch 29: Train Loss: 0.1570, Val F1: 0.9285
+2025-09-05 05:47:03,046 - INFO - Fold 4 Epoch 30: Train Loss: 0.1555, Val F1: 0.9250
+2025-09-05 05:50:38,374 - INFO - Fold 4 Epoch 31: Train Loss: 0.1362, Val F1: 0.9297
+2025-09-05 05:54:13,674 - INFO - Fold 4 Epoch 32: Train Loss: 0.1391, Val F1: 0.9357
+2025-09-05 05:57:48,873 - INFO - Fold 4 Epoch 33: Train Loss: 0.1374, Val F1: 0.9360
+2025-09-05 06:01:24,010 - INFO - Fold 4 Epoch 34: Train Loss: 0.1321, Val F1: 0.9413
+2025-09-05 06:04:59,241 - INFO - Fold 4 Epoch 35: Train Loss: 0.1380, Val F1: 0.9250
+2025-09-05 06:08:34,299 - INFO - Fold 4 Epoch 36: Train Loss: 0.1297, Val F1: 0.9359
+2025-09-05 06:12:09,169 - INFO - Fold 4 Epoch 37: Train Loss: 0.1224, Val F1: 0.9444
+2025-09-05 06:15:44,079 - INFO - Fold 4 Epoch 38: Train Loss: 0.1206, Val F1: 0.9266
+2025-09-05 06:19:18,603 - INFO - Fold 4 Epoch 39: Train Loss: 0.1173, Val F1: 0.9427
+2025-09-05 06:22:53,450 - INFO - Fold 4 Epoch 40: Train Loss: 0.1199, Val F1: 0.9382
+2025-09-05 06:26:28,315 - INFO - Fold 4 Epoch 41: Train Loss: 0.1235, Val F1: 0.9350
+2025-09-05 06:30:03,305 - INFO - Fold 4 Epoch 42: Train Loss: 0.1100, Val F1: 0.9361
+2025-09-05 06:33:38,276 - INFO - Fold 4 Epoch 43: Train Loss: 0.1083, Val F1: 0.9361
+2025-09-05 06:37:12,974 - INFO - Fold 4 Epoch 44: Train Loss: 0.1044, Val F1: 0.9424
+2025-09-05 06:40:47,699 - INFO - Fold 4 Epoch 45: Train Loss: 0.1090, Val F1: 0.9391
+2025-09-05 06:44:22,452 - INFO - Fold 4 Epoch 46: Train Loss: 0.1002, Val F1: 0.9415
+2025-09-05 06:47:56,911 - INFO - Fold 4 Epoch 47: Train Loss: 0.1081, Val F1: 0.9431
+2025-09-05 06:47:56,912 - INFO - Early stopping ativado na época 47.
+2025-09-05 06:47:57,019 - INFO - 
+=============== FOLD 5/5 ===============
+2025-09-05 06:51:33,804 - INFO - Fold 5 Epoch 1: Train Loss: 0.5488, Val F1: 0.8514
+2025-09-05 06:55:10,509 - INFO - Fold 5 Epoch 2: Train Loss: 0.4418, Val F1: 0.8630
+2025-09-05 06:58:47,326 - INFO - Fold 5 Epoch 3: Train Loss: 0.3986, Val F1: 0.8567
+2025-09-05 07:02:23,940 - INFO - Fold 5 Epoch 4: Train Loss: 0.3584, Val F1: 0.8725
+2025-09-05 07:06:00,663 - INFO - Fold 5 Epoch 5: Train Loss: 0.3556, Val F1: 0.8826
+2025-09-05 07:09:37,296 - INFO - Fold 5 Epoch 6: Train Loss: 0.3220, Val F1: 0.8863
+2025-09-05 07:13:13,838 - INFO - Fold 5 Epoch 7: Train Loss: 0.3093, Val F1: 0.8964
+2025-09-05 07:16:50,276 - INFO - Fold 5 Epoch 8: Train Loss: 0.2864, Val F1: 0.9058
+2025-09-05 07:20:26,754 - INFO - Fold 5 Epoch 9: Train Loss: 0.2775, Val F1: 0.8788
+2025-09-05 07:24:03,035 - INFO - Fold 5 Epoch 10: Train Loss: 0.2684, Val F1: 0.9062
+2025-09-05 07:27:39,518 - INFO - Fold 5 Epoch 11: Train Loss: 0.2623, Val F1: 0.8807
+2025-09-05 07:31:15,827 - INFO - Fold 5 Epoch 12: Train Loss: 0.2537, Val F1: 0.9003
+2025-09-05 07:34:52,080 - INFO - Fold 5 Epoch 13: Train Loss: 0.2428, Val F1: 0.9004
+2025-09-05 07:38:28,329 - INFO - Fold 5 Epoch 14: Train Loss: 0.2270, Val F1: 0.9121
+2025-09-05 07:42:04,617 - INFO - Fold 5 Epoch 15: Train Loss: 0.2358, Val F1: 0.9026
+2025-09-05 07:45:40,725 - INFO - Fold 5 Epoch 16: Train Loss: 0.2178, Val F1: 0.9122
+2025-09-05 07:49:17,027 - INFO - Fold 5 Epoch 17: Train Loss: 0.2140, Val F1: 0.9149
+2025-09-05 07:52:53,073 - INFO - Fold 5 Epoch 18: Train Loss: 0.2111, Val F1: 0.9222
+2025-09-05 07:56:29,317 - INFO - Fold 5 Epoch 19: Train Loss: 0.2054, Val F1: 0.9216
+2025-09-05 08:00:05,465 - INFO - Fold 5 Epoch 20: Train Loss: 0.1935, Val F1: 0.9164
+2025-09-05 08:03:41,423 - INFO - Fold 5 Epoch 21: Train Loss: 0.1883, Val F1: 0.9275
+2025-09-05 08:07:17,607 - INFO - Fold 5 Epoch 22: Train Loss: 0.1968, Val F1: 0.9295
+2025-09-05 08:10:53,813 - INFO - Fold 5 Epoch 23: Train Loss: 0.1759, Val F1: 0.9243
+2025-09-05 08:14:29,931 - INFO - Fold 5 Epoch 24: Train Loss: 0.1718, Val F1: 0.9220
+2025-09-05 08:18:05,801 - INFO - Fold 5 Epoch 25: Train Loss: 0.1693, Val F1: 0.9152
+2025-09-05 08:21:41,808 - INFO - Fold 5 Epoch 26: Train Loss: 0.1688, Val F1: 0.9243
+2025-09-05 08:25:17,756 - INFO - Fold 5 Epoch 27: Train Loss: 0.1618, Val F1: 0.9280
+2025-09-05 08:28:53,624 - INFO - Fold 5 Epoch 28: Train Loss: 0.1581, Val F1: 0.9276
+2025-09-05 08:32:29,552 - INFO - Fold 5 Epoch 29: Train Loss: 0.1588, Val F1: 0.9256
+2025-09-05 08:36:05,371 - INFO - Fold 5 Epoch 30: Train Loss: 0.1575, Val F1: 0.9304
+2025-09-05 08:39:41,284 - INFO - Fold 5 Epoch 31: Train Loss: 0.1496, Val F1: 0.9284
+2025-09-05 08:43:17,063 - INFO - Fold 5 Epoch 32: Train Loss: 0.1453, Val F1: 0.9362
+2025-09-05 08:46:52,971 - INFO - Fold 5 Epoch 33: Train Loss: 0.1489, Val F1: 0.9261
+2025-09-05 08:50:28,787 - INFO - Fold 5 Epoch 34: Train Loss: 0.1389, Val F1: 0.9172
+2025-09-05 08:54:04,378 - INFO - Fold 5 Epoch 35: Train Loss: 0.1381, Val F1: 0.9368
+2025-09-05 08:57:40,232 - INFO - Fold 5 Epoch 36: Train Loss: 0.1297, Val F1: 0.9387
+2025-09-05 09:01:16,076 - INFO - Fold 5 Epoch 37: Train Loss: 0.1316, Val F1: 0.9376
+2025-09-05 09:04:51,676 - INFO - Fold 5 Epoch 38: Train Loss: 0.1283, Val F1: 0.9316
+2025-09-05 09:08:27,096 - INFO - Fold 5 Epoch 39: Train Loss: 0.1277, Val F1: 0.9303
+2025-09-05 09:12:02,560 - INFO - Fold 5 Epoch 40: Train Loss: 0.1194, Val F1: 0.9430
+2025-09-05 09:15:38,129 - INFO - Fold 5 Epoch 41: Train Loss: 0.1173, Val F1: 0.9358
+2025-09-05 09:19:13,749 - INFO - Fold 5 Epoch 42: Train Loss: 0.1160, Val F1: 0.9374
+2025-09-05 09:22:49,132 - INFO - Fold 5 Epoch 43: Train Loss: 0.1135, Val F1: 0.9446
+2025-09-05 09:26:24,558 - INFO - Fold 5 Epoch 44: Train Loss: 0.1070, Val F1: 0.9426
+2025-09-05 09:29:59,891 - INFO - Fold 5 Epoch 45: Train Loss: 0.1066, Val F1: 0.9369
+2025-09-05 09:33:35,314 - INFO - Fold 5 Epoch 46: Train Loss: 0.1029, Val F1: 0.9391
+2025-09-05 09:37:10,759 - INFO - Fold 5 Epoch 47: Train Loss: 0.1040, Val F1: 0.9223
+2025-09-05 09:40:46,094 - INFO - Fold 5 Epoch 48: Train Loss: 0.1060, Val F1: 0.9369
+2025-09-05 09:44:21,343 - INFO - Fold 5 Epoch 49: Train Loss: 0.1015, Val F1: 0.9383
+2025-09-05 09:47:56,474 - INFO - Fold 5 Epoch 50: Train Loss: 0.0928, Val F1: 0.9387
+2025-09-05 09:47:56,580 - INFO - 
+--- Avaliação Final com Ensemble ---
+2025-09-05 09:50:04,853 - INFO - 
+                 precision    recall  f1-score   support
+
+          COVID       1.00      0.99      1.00      1464
+   Lung_Opacity       0.96      0.90      0.93      1803
+         Normal       0.94      0.97      0.96      2038
+Viral Pneumonia       0.94      0.99      0.96      1196
+
+       accuracy                           0.96      6501
+      macro avg       0.96      0.96      0.96      6501
+   weighted avg       0.96      0.96      0.96      6501
+
+2025-09-05 09:50:04,911 - INFO - ========================= EXPERIMENTO FINALIZADO PARA: BIGGER_BASE =========================
+

@@ -1,11 +1,9 @@
 *.pth
-./data
-./data_originals
 *.zip
 /base_gray_224_padded_balanced
-*.png
-*.jpeg
-*.json
-*.log
-*.jpg 
 *.xlsx
+__pycache__
+
+#Datasets:
+/data
+/dataset_errado
